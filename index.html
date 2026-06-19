@@ -102,8 +102,15 @@
       position: relative;
       z-index: 1;
       overflow: hidden;
-      /* Block canvas — hero has its own solid image */
       isolation: isolate;
+    }
+    /* Solid block between canvas and hero content */
+    #hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: #0a1428 url('page_1.png') center/cover no-repeat;
+      z-index: 0;
     }
 
 
@@ -120,7 +127,7 @@
     }
 
     .hero-inner {
-      position: relative; z-index: 2;
+      position: relative; z-index: 1;
       max-width: 1000px;
       text-align: center;
       width: 100%;
