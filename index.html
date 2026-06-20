@@ -878,6 +878,10 @@ function jumpTo(id){
 
 function enterBook(){
   if(absorbing)return;
+  // Fire enter sound immediately on click
+  const es=new Audio('Enter_sound.mp3');
+  es.volume=1.0;
+  es.play().catch(()=>{});
   absorbing=true;absorbT=0;absorbDone=false;
   const hc=document.getElementById('hero-content');
   hc.style.transition='opacity 0.2s ease';
