@@ -940,6 +940,7 @@ function toggleTOC(){
 function tocJump(pg){
   const m=document.getElementById('toc-music');
   if(m){m.pause();m.currentTime=0;}
+  if(window.stopHeroAudio)window.stopHeroAudio();
   stopTOCCanvas();
   document.getElementById('toc-overlay').classList.remove('open');
   document.getElementById('book').classList.add('open');
@@ -951,6 +952,7 @@ function tocJump(pg){
 function tocSkip(){
   const m=document.getElementById('toc-music');
   if(m){m.pause();m.currentTime=0;}
+  if(window.stopHeroAudio)window.stopHeroAudio();
   stopTOCCanvas();
   document.getElementById('toc-overlay').classList.remove('open');
   document.getElementById('book').classList.add('open');
