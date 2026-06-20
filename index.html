@@ -912,7 +912,7 @@ function jumpTo(id){
   toggleTOC();
 }
 
-function enterBook(){
+function enterBook(){stopHeroAudio();
   if(absorbing)return;
   // Fire enter sound immediately on click
   const es=new Audio('Enter_Sound.mp3');
@@ -1190,6 +1190,6 @@ function startDream(){
   }
 })();
 </script>
-<script>var _heroPlayed=false;document.addEventListener("click",function(){if(!_heroPlayed){_heroPlayed=true;var a=new Audio("hero.mp3");a.play().catch(function(){});}},{ once: true });</script>
+<script>var _heroAudio=null;function startHeroAudio(){_heroAudio=new Audio("hero.mp3");_heroAudio.volume=0.7;_heroAudio.play().catch(function(){});}function stopHeroAudio(){if(_heroAudio){_heroAudio.pause();_heroAudio.currentTime=0;_heroAudio=null;}}document.addEventListener("DOMContentLoaded",function(){setTimeout(startHeroAudio,500);});</script>
 </body>
 </html>
