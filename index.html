@@ -525,7 +525,14 @@ html,body{width:100%;height:100%;background:var(--deep);color:#fff;font-family:'
         <span class="te-arrow">&#8594;</span>
       </div>
     </div>
-    <button class="toc-close-btn" onclick="toggleTOC()">&#10005; &nbsp; Close</button>
+    <audio id="toc-music" loop style="display:none"><source src="Toc.mp3" type="audio/mpeg"></audio>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:0.6rem;margin-top:1.2rem;flex-shrink:0;">
+      <button class="l-btn" style="font-size:0.72rem;padding:0.85rem 2.6rem;margin:0;letter-spacing:0.3em;" onclick="tocJump('pg1')">&#9654; Begin from Page One</button>
+      <div style="display:flex;gap:0.7rem;align-items:center;">
+        <button id="toc-music-btn" onclick="toggleTOCMusic()" style="background:transparent;border:1px solid rgba(245,168,0,0.3);color:rgba(245,168,0,0.55);font-family:'Georgia',serif;font-size:0.58rem;letter-spacing:0.25em;text-transform:uppercase;padding:0.3rem 0.8rem;cursor:pointer;">Music</button>
+        <button class="toc-close-btn" style="margin-top:0;" onclick="tocSkip()">&#10005; Skip to Book</button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -693,7 +700,11 @@ function drawEye(){
       cx.fillStyle='#000';cx.fillRect(0,0,W,H);
       setTimeout(()=>{
         document.getElementById('landing').style.display='none';
-        document.getElementById('book').classList.add('open');
+        const ov=document.getElementById('toc-overlay');
+        ov.classList.add('open');
+        startTOCCanvas();
+        const m=document.getElementById('toc-music');
+        if(m){m.play().catch(()=>{});}
       },80);
     }else{
       requestAnimationFrame(drawEye);
@@ -879,7 +890,7 @@ function jumpTo(id){
 function enterBook(){
   if(absorbing)return;
   // Fire enter sound immediately on click
-  const es=new Audio('Enter_sound.mp3');
+  const es=new Audio('Enter_Sound.mp3');
   es.volume=1.0;
   es.play().catch(()=>{});
   absorbing=true;absorbT=0;absorbDone=false;
@@ -893,11 +904,35 @@ function toggleTOC(){
   const ov=document.getElementById('toc-overlay');
   const opening=!ov.classList.contains('open');
   ov.classList.toggle('open');
-  if(opening){startTOCCanvas();}else{stopTOCCanvas();}
+  if(opening){
+    startTOCCanvas();
+    const m=document.getElementById('toc-music');if(m)m.play().catch(()=>{});
+  }else{
+    stopTOCCanvas();
+    const m=document.getElementById('toc-music');if(m){m.pause();m.currentTime=0;}
+  }
 }
 function tocJump(pg){
-  toggleTOC();
-  setTimeout(()=>jumpTo(pg),400);
+  const m=document.getElementById('toc-music');
+  if(m){m.pause();m.currentTime=0;}
+  stopTOCCanvas();
+  document.getElementById('toc-overlay').classList.remove('open');
+  document.getElementById('book').classList.add('open');
+  setTimeout(()=>jumpTo(pg),420);
+}
+function tocSkip(){
+  const m=document.getElementById('toc-music');
+  if(m){m.pause();m.currentTime=0;}
+  stopTOCCanvas();
+  document.getElementById('toc-overlay').classList.remove('open');
+  document.getElementById('book').classList.add('open');
+}
+function toggleTOCMusic(){
+  const m=document.getElementById('toc-music');
+  if(!m)return;
+  const b=document.getElementById('toc-music-btn');
+  if(m.paused){m.play().catch(()=>{});if(b)b.textContent='Pause';}
+  else{m.pause();if(b)b.textContent='Music';}
 }
 
 let currentAudio=null,currentBtn=null;
