@@ -142,7 +142,7 @@ html,body{width:100%;height:100%;background:var(--deep);color:#fff;font-family:'
     <div class="l-title">DREAMS</div>
     <p class="hero-sub">A Roni Nash Dream Production</p>
     <div class="l-line"></div>
-    <button class="l-btn" onclick="enterBook()" style="animation:enter-pulse 2s ease-in-out infinite;">&#9654;&nbsp; Enter the Dream</button>
+    <button class="l-btn" onclick="startHeroAudio();enterBook();" style="animation:enter-pulse 2s ease-in-out infinite;">&#9654;&nbsp; Enter the Dream</button>
   </div>
 </div>
 
@@ -975,7 +975,6 @@ function jumpTo(id){
 }
 
 function enterBook(){
-  startHeroAudio();
   if(absorbing)return;
   // Fire enter sound immediately on click
   const es=new Audio('Enter_Sound.mp3');
@@ -1255,6 +1254,6 @@ function startDream(){
   }
 })();
 </script>
-<script>var _heroAudio=null;var _heroStarted=false;function startHeroAudio(){if(_heroStarted)return;_heroStarted=true;_heroAudio=new Audio("hero.mp3");_heroAudio.volume=0.7;_heroAudio.play().catch(function(){});}window.stopHeroAudio=function(){if(_heroAudio){_heroAudio.pause();_heroAudio.currentTime=0;_heroAudio=null;}};</script>
+<script>var _heroAudio=null;var _heroStarted=false;function startHeroAudio(){if(_heroStarted)return;_heroStarted=true;_heroAudio=new Audio("hero.mp3");_heroAudio.volume=1.0;_heroAudio.play().then(function(){}).catch(function(e){console.log("hero audio blocked:",e);});}window.stopHeroAudio=function(){if(_heroAudio){_heroAudio.pause();_heroAudio.currentTime=0;_heroAudio=null;}};</script>
 </body>
 </html>
