@@ -587,6 +587,7 @@ const flares=[
 ];
 
 let rot=0,t=0;
+let absorbing=false,absorbT=0,absorbDone=false;
 
 function drawEye(){
   const W=EC.width,H=EC.height;
@@ -594,6 +595,57 @@ function drawEye(){
   const R=Math.min(W,H)*0.38; // nebula radius
   cx.clearRect(0,0,W,H);
   t++;rot+=0.0008;
+
+  // ── BLACK HOLE ABSORPTION
+  if(absorbing){
+    absorbT+=0.022; // controls speed — 0=start, 1=done
+    const ease=absorbT<1?absorbT:1;
+    const suck=Math.pow(ease,2.2); // accelerates toward end
+
+    // Shrink the nebula radius as we get sucked in
+    const shrink=1-suck*0.85;
+    // Rotate faster as we spiral in
+    rot+=suck*0.08;
+    // Pull all dust inward
+    dust.forEach(d=>{d.r=Math.max(0,d.r*(1-suck*0.04));});
+    cyans.forEach(s=>{s.r=Math.max(0,s.r*(1-suck*0.04));});
+
+    // At the singularity moment, fill with expanding black circle
+    if(ease>0.6){
+      const bProgress=(ease-0.6)/0.4; // 0→1 in final 40%
+      const blackR=Math.max(W,H)*2*Math.pow(bProgress,1.8);
+      cx.save();
+      cx.beginPath();cx.arc(CX,CY,blackR,0,Math.PI*2);
+      cx.fillStyle=`rgba(0,0,0,${Math.min(1,bProgress*2.5)})`;
+      cx.fill();
+      cx.restore();
+    }
+
+    if(ease>=1&&!absorbDone){
+      absorbDone=true;
+      // Black screen — now reveal the book
+      setTimeout(()=>{
+        document.getElementById('landing').style.display='none';
+        document.getElementById('book').classList.add('open');
+      },80);
+      return; // stop drawing
+    }
+
+    // Override R with shrinking version for rest of draw
+    // (we patch by scaling the whole canvas context)
+    cx.save();
+    cx.translate(CX,CY);
+    cx.scale(shrink+(1-shrink)*0.15,shrink+(1-shrink)*0.15);
+    cx.translate(-CX,-CY);
+    // Draw a slight spiral warp overlay
+    const warpAlpha=suck*0.35;
+    const warpG=cx.createRadialGradient(CX,CY,0,CX,CY,R*0.9);
+    warpG.addColorStop(0,`rgba(0,0,0,${warpAlpha*1.5})`);
+    warpG.addColorStop(0.5,`rgba(0,0,0,${warpAlpha*0.3})`);
+    warpG.addColorStop(1,'rgba(0,0,0,0)');
+    cx.fillStyle=warpG;cx.fillRect(0,0,W,H);
+    cx.restore();
+  }
 
   // ── Deep space background
   const bg=cx.createRadialGradient(CX,CY,0,CX,CY,Math.max(W,H)*0.75);
@@ -770,11 +822,15 @@ function jumpTo(id){
 }
 
 function enterBook(){
-  document.getElementById('landing').classList.add('gone');
-  setTimeout(()=>{
-    document.getElementById('landing').style.display='none';
-    document.getElementById('book').classList.add('open');
-  },1400);
+  if(absorbing)return;
+  absorbing=true;
+  absorbT=0;
+  absorbDone=false;
+  // Hide the text/button immediately so only the nebula absorbs
+  document.getElementById('hero-content').style.transition='opacity 0.3s';
+  document.getElementById('hero-content').style.opacity='0';
+  // Landing stays visible (transparent bg) while canvas absorbs
+  // book reveal happens inside drawEye when absorbDone
 }
 
 function toggleTOC(){
