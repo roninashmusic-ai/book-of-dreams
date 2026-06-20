@@ -115,7 +115,7 @@ html,body{width:100%;height:100%;background:var(--deep);color:#fff;font-family:'
 .sg-input:focus{border-color:rgba(245,168,0,0.85);}
 .sg-skip{margin-top:0.4rem;background:transparent;border:none;color:rgba(245,168,0,0.3);font-family:'Georgia',serif;font-size:0.6rem;letter-spacing:0.28em;text-transform:uppercase;cursor:pointer;transition:color 0.2s;text-decoration:underline;}
 .sg-skip:hover{color:rgba(245,168,0,0.65);}
-@keyframes void-fade{0%{opacity:0;}100%{opacity:1;}}@keyframes void-pulse{0%,100%{opacity:0.5;}50%{opacity:1;}}.void-prompt{position:absolute;bottom:12%;left:50%;transform:translateX(-50%);color:rgba(245,168,0,0.7);font-family:Georgia,serif;font-size:0.75rem;letter-spacing:0.35em;text-transform:uppercase;z-index:10;animation:void-fade 1s ease forwards 2.5s, void-pulse 3s ease-in-out infinite 3.5s;opacity:0;pointer-events:none;white-space:nowrap;}@keyframes void-fade{0%{opacity:0;}100%{opacity:1;}}@keyframes void-pulse{0%,100%{opacity:0.5;}50%{opacity:1;}}.void-prompt{position:absolute;bottom:12%;left:50%;transform:translateX(-50%);color:rgba(245,168,0,0.7);font-family:Georgia,serif;font-size:0.75rem;letter-spacing:0.35em;text-transform:uppercase;z-index:10;animation:void-fade 1s ease forwards 2.5s, void-pulse 3s ease-in-out infinite 3.5s;opacity:0;pointer-events:none;white-space:nowrap;}</style>
+@keyframes void-fade{0%{opacity:0;}100%{opacity:1;}}@keyframes void-pulse{0%,100%{opacity:0.5;}50%{opacity:1;}}.void-prompt{position:absolute;bottom:12%;left:50%;transform:translateX(-50%);color:rgba(245,168,0,0.7);font-family:Georgia,serif;font-size:0.75rem;letter-spacing:0.35em;text-transform:uppercase;z-index:10;animation:void-fade 1s ease forwards 2.5s, void-pulse 3s ease-in-out infinite 3.5s;opacity:0;pointer-events:none;white-space:nowrap;}@keyframes void-fade{0%{opacity:0;}100%{opacity:1;}}@keyframes void-pulse{0%,100%{opacity:0.5;}50%{opacity:1;}}.void-prompt{position:absolute;bottom:12%;left:50%;transform:translateX(-50%);color:rgba(245,168,0,0.7);font-family:Georgia,serif;font-size:0.75rem;letter-spacing:0.35em;text-transform:uppercase;z-index:10;animation:void-fade 1s ease forwards 2.5s, void-pulse 3s ease-in-out infinite 3.5s;opacity:0;pointer-events:none;white-space:nowrap;}@keyframes void-fade{0%{opacity:0;}100%{opacity:1;}}@keyframes void-pulse{0%,100%{opacity:0.5;}50%{opacity:1;}}.void-prompt{position:absolute;bottom:12%;left:50%;transform:translateX(-50%);color:rgba(245,168,0,0.7);font-family:Georgia,serif;font-size:0.75rem;letter-spacing:0.35em;text-transform:uppercase;z-index:10;animation:void-fade 1s ease forwards 2.5s, void-pulse 3s ease-in-out infinite 3.5s;opacity:0;pointer-events:none;white-space:nowrap;}</style>
 </head>
 <body>
 <canvas id="eye-canvas"></canvas>
@@ -134,6 +134,7 @@ html,body{width:100%;height:100%;background:var(--deep);color:#fff;font-family:'
 
 <div id="landing" style="display:none;">
   <div id="hero-content">
+    <div class="void-prompt">&#x2736; Touch the void to begin &#x2736;</div>
     <div class="void-prompt">&#x2736; Touch the void to begin &#x2736;</div>
     <div class="void-prompt">&#x2736; Touch the void to begin &#x2736;</div>
     <p class="byline">Roni Nash</p>
@@ -768,6 +769,26 @@ function drawEye(){
     rr.addColorStop(1,'rgba(0,0,0,0)');
     cx.fillStyle=rr;
     cx.beginPath();cx.arc(0,0,R*(1.1+i*0.06)*pulse,0,Math.PI*2);cx.fill();
+  }
+  cx.restore();
+
+  // ── Cloud wisps around outer ring
+  cx.save();cx.translate(CX,CY);cx.rotate(rot*0.85);
+  const numWisps=18;
+  for(let i=0;i<numWisps;i++){
+    const baseAngle=i*(Math.PI*2/numWisps);
+    const wobble=Math.sin(t*0.006+i*1.7)*0.18+Math.cos(t*0.004+i*2.3)*0.12;
+    const radVar=R*(1.08+Math.sin(t*0.005+i*2.9)*0.12+Math.cos(t*0.007+i*1.3)*0.08);
+    const wx=Math.cos(baseAngle+wobble)*radVar;
+    const wy=Math.sin(baseAngle+wobble)*radVar;
+    const wSize=R*(0.18+Math.sin(t*0.009+i*1.1)*0.09);
+    const wAlpha=0.12+Math.sin(t*0.007+i*2.1)*0.07;
+    const wg=cx.createRadialGradient(wx,wy,0,wx,wy,wSize);
+    wg.addColorStop(0,`rgba(140,20,35,${wAlpha*1.4})`);
+    wg.addColorStop(0.4,`rgba(110,15,25,${wAlpha})`);
+    wg.addColorStop(1,'rgba(0,0,0,0)');
+    cx.fillStyle=wg;
+    cx.beginPath();cx.arc(wx,wy,wSize,0,Math.PI*2);cx.fill();
   }
   cx.restore();
 
