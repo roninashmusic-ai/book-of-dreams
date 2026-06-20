@@ -937,6 +937,14 @@ function toggleTOCMusic(){
 
 let currentAudio=null,currentBtn=null;
 function playAudio(btn,src){
+  // If same button pressed again — stop it
+  if(currentBtn===btn&&currentAudio&&!currentAudio.paused){
+    currentAudio.pause();currentAudio=null;
+    btn.innerHTML='<span class="tri"></span><span class="btn-label">Play Narration</span>';
+    btn.classList.remove('playing');
+    currentBtn=null;
+    return;
+  }
   if(currentAudio){
     currentAudio.pause();currentAudio=null;
     if(currentBtn){
