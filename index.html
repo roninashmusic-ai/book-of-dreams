@@ -69,18 +69,6 @@ html,body{width:100%;height:100%;background:var(--deep);color:#fff;font-family:'
 .arr:hover:not(:disabled){background:rgba(74,127,160,0.22);border-color:var(--teal-glow);}
 .arr:disabled{opacity:0.18;cursor:default;}
 #pg-counter{font-size:0.6rem;letter-spacing:0.28em;color:rgba(255,255,255,0.3);text-transform:uppercase;}
-#toc-overlay{position:fixed;inset:0;background:rgba(2,4,14,0.98);z-index:100;opacity:0;pointer-events:none;transition:opacity 0.38s ease;display:flex;flex-direction:column;}
-#toc-overlay.open{opacity:1;pointer-events:all;}
-.toc-header{padding:1.5rem 2rem 1rem;border-bottom:0.5px solid rgba(74,127,160,0.25);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
-.toc-title{font-family:Impact,sans-serif;font-size:1.6rem;letter-spacing:0.25em;color:#fff;}
-.toc-close{background:transparent;border:1px solid rgba(74,127,160,0.5);color:rgba(255,255,255,0.7);font-family:'Georgia',serif;font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;padding:0.35rem 0.85rem;cursor:pointer;transition:all 0.2s;}
-.toc-close:hover{background:rgba(74,127,160,0.22);border-color:var(--teal-glow);color:#fff;}
-.toc-list{flex:1;overflow-y:auto;padding:0.5rem 0;}
-.toc-row{display:flex;align-items:center;gap:1.2rem;padding:0.85rem 2rem;border-bottom:0.5px solid rgba(255,255,255,0.05);cursor:pointer;transition:all 0.22s;}
-.toc-row:hover{background:rgba(74,127,160,0.12);padding-left:2.5rem;}
-.toc-row:active{background:rgba(74,127,160,0.25);}
-.toc-num{font-family:Impact,sans-serif;font-size:1.4rem;color:rgba(74,127,160,0.7);min-width:48px;text-align:right;flex-shrink:0;}
-.toc-info{flex:1;}
 .ti-lbl{font-size:0.9rem;color:rgba(255,255,255,0.82);letter-spacing:0.04em;}
 .ti-sub{font-size:0.65rem;color:rgba(255,255,255,0.32);margin-top:0.15rem;letter-spacing:0.08em;}
 .l-title{font-family:'Georgia','Times New Roman',serif;font-size:clamp(44px,9vw,96px);font-weight:400;letter-spacing:0.07em;text-transform:uppercase;color:#f5c842;margin:0;line-height:1.0;animation:title-breathe 6s ease-in-out infinite;}
@@ -89,6 +77,31 @@ html,body{width:100%;height:100%;background:var(--deep);color:#fff;font-family:'
 .l-btn:hover{background:rgba(245,168,0,0.18);border-color:#f5c842;transform:scale(1.04);}
 .l-btn:active{transform:scale(0.97);}
 #eye-canvas{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:0;}
+
+/* ── CINEMATIC TOC ── */
+#toc-overlay{position:fixed;inset:0;z-index:100;opacity:0;pointer-events:none;transition:opacity 0.5s ease;overflow:hidden;}
+#toc-overlay.open{opacity:1;pointer-events:all;}
+#toc-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:0;}
+#toc-veil{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(0,0,0,0.55) 0%,rgba(0,0,0,0.88) 100%);z-index:1;}
+#toc-panel{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:3rem 2rem;}
+.toc-eyebrow{font-family:'Georgia',serif;font-size:0.68rem;letter-spacing:0.45em;text-transform:uppercase;color:rgba(245,168,0,0.55);margin-bottom:0.6rem;}
+.toc-headline{font-family:'Georgia',serif;font-size:clamp(2rem,5vw,3.8rem);font-weight:400;letter-spacing:0.12em;text-transform:uppercase;color:#f5c842;margin:0 0 0.4rem;text-shadow:0 0 60px rgba(245,168,0,0.4),0 0 120px rgba(245,168,0,0.15);}
+.toc-rule{width:120px;height:1px;background:linear-gradient(to right,transparent,rgba(245,168,0,0.6),transparent);margin:1.2rem auto 2rem;}
+.toc-entries{display:flex;flex-direction:column;gap:0;width:100%;max-width:620px;}
+.toc-entry{display:flex;align-items:center;gap:1.5rem;padding:0.95rem 1.2rem;cursor:pointer;border-bottom:0.5px solid rgba(245,168,0,0.1);transition:all 0.25s ease;opacity:0;transform:translateY(18px);}
+.toc-entry:first-child{border-top:0.5px solid rgba(245,168,0,0.1);}
+#toc-overlay.open .toc-entry{opacity:1;transform:translateY(0);}
+.toc-entry:hover{background:rgba(245,168,0,0.07);padding-left:2rem;}
+.toc-entry:hover .te-num{color:#f5c842;}
+.toc-entry:hover .te-title{color:#fff;}
+.te-num{font-family:'Georgia',serif;font-size:0.72rem;letter-spacing:0.22em;color:rgba(245,168,0,0.4);min-width:36px;flex-shrink:0;}
+.te-body{flex:1;}
+.te-title{font-family:'Georgia',serif;font-size:1.02rem;font-weight:400;letter-spacing:0.06em;color:rgba(255,255,255,0.88);line-height:1.2;transition:color 0.2s;}
+.te-sub{font-family:'Georgia',serif;font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(245,168,0,0.4);margin-top:0.15rem;}
+.te-arrow{color:rgba(245,168,0,0.3);font-size:0.9rem;transition:all 0.2s;flex-shrink:0;}
+.toc-entry:hover .te-arrow{color:rgba(245,168,0,0.9);transform:translateX(4px);}
+.toc-close-btn{margin-top:2.2rem;background:transparent;border:1px solid rgba(245,168,0,0.35);color:rgba(245,168,0,0.6);font-family:'Georgia',serif;font-size:0.65rem;letter-spacing:0.32em;text-transform:uppercase;padding:0.6rem 2rem;cursor:pointer;transition:all 0.25s;}
+.toc-close-btn:hover{background:rgba(245,168,0,0.1);border-color:rgba(245,168,0,0.8);color:#f5c842;}
 </style>
 </head>
 <body>
@@ -122,12 +135,6 @@ html,body{width:100%;height:100%;background:var(--deep);color:#fff;font-family:'
     <div class="page-card">
       <img class="page-img" src="page_3.png" alt="Page 3"/>
       <span class="pg-num">Page 3</span>
-    </div>
-  </div>
-  <div class="page" id="pg4">
-    <div class="page-card">
-      <img class="page-img" src="page_4.png" alt="Page 4"/>
-      <span class="pg-num">Page 4</span>
     </div>
   </div>
   <div class="page" id="pg5">
@@ -455,96 +462,70 @@ html,body{width:100%;height:100%;background:var(--deep);color:#fff;font-family:'
 </div>
 
 <div id="toc-overlay">
-  <div class="toc-header">
-    <span class="toc-title">CONTENTS</span>
-    <button class="toc-close" onclick="toggleTOC()">&#10005; Close</button>
-  </div>
-  <div class="toc-list">
-
-      <div class="toc-row" onclick="jumpTo('pg1')">
-        <span class="toc-num">01</span>
-        <div class="toc-info">
-          <div class="ti-lbl">Welcome to My Dreams</div>
-          <div class="ti-sub">Introduction</div>
-        </div>
+  <canvas id="toc-canvas"></canvas>
+  <div id="toc-veil"></div>
+  <div id="toc-panel">
+    <p class="toc-eyebrow">Ecliptia's Dawn</p>
+    <h2 class="toc-headline">Book of Dreams</h2>
+    <div class="toc-rule"></div>
+    <div class="toc-entries">
+      <div class="toc-entry" style="transition-delay:0.05s" onclick="tocJump('pg1')">
+        <span class="te-num">01</span>
+        <div class="te-body"><div class="te-title">Welcome to My Dreams</div><div class="te-sub">Introduction</div></div>
+        <span class="te-arrow">&#8594;</span>
       </div>
-      <div class="toc-row" onclick="jumpTo('pg3')">
-        <span class="toc-num">03</span>
-        <div class="toc-info">
-          <div class="ti-lbl">Chapter One: Echoes of Earth</div>
-          <div class="ti-sub">The Beginning</div>
-        </div>
+      <div class="toc-entry" style="transition-delay:0.1s" onclick="tocJump('pg3')">
+        <span class="te-num">03</span>
+        <div class="te-body"><div class="te-title">Chapter One: Echoes of Earth</div><div class="te-sub">The Beginning</div></div>
+        <span class="te-arrow">&#8594;</span>
       </div>
-      <div class="toc-row" onclick="jumpTo('pg14')">
-        <span class="toc-num">14</span>
-        <div class="toc-info">
-          <div class="ti-lbl">Chapter Two: Ecliptia's Twilight</div>
-          <div class="ti-sub">The World Beyond</div>
-        </div>
+      <div class="toc-entry" style="transition-delay:0.15s" onclick="tocJump('pg14')">
+        <span class="te-num">14</span>
+        <div class="te-body"><div class="te-title">Chapter Two: Ecliptia's Twilight</div><div class="te-sub">The World Beyond</div></div>
+        <span class="te-arrow">&#8594;</span>
       </div>
-      <div class="toc-row" onclick="jumpTo('pg18')">
-        <span class="toc-num">18</span>
-        <div class="toc-info">
-          <div class="ti-lbl">Chapter Three: Paths Converge</div>
-          <div class="ti-sub">The Alliance Forms</div>
-        </div>
+      <div class="toc-entry" style="transition-delay:0.2s" onclick="tocJump('pg18')">
+        <span class="te-num">18</span>
+        <div class="te-body"><div class="te-title">Chapter Three: Paths Converge</div><div class="te-sub">The Alliance Forms</div></div>
+        <span class="te-arrow">&#8594;</span>
       </div>
-      <div class="toc-row" onclick="jumpTo('pg25')">
-        <span class="toc-num">25</span>
-        <div class="toc-info">
-          <div class="ti-lbl">Chapter Four: The Battle Ignites</div>
-          <div class="ti-sub">War for Ecliptia</div>
-        </div>
+      <div class="toc-entry" style="transition-delay:0.25s" onclick="tocJump('pg25')">
+        <span class="te-num">25</span>
+        <div class="te-body"><div class="te-title">Chapter Four: The Battle Ignites</div><div class="te-sub">War for Ecliptia</div></div>
+        <span class="te-arrow">&#8594;</span>
       </div>
-      <div class="toc-row" onclick="jumpTo('pg30')">
-        <span class="toc-num">30</span>
-        <div class="toc-info">
-          <div class="ti-lbl">Chapter Five: The Last Stand</div>
-          <div class="ti-sub">The Prem Rath Revealed</div>
-        </div>
+      <div class="toc-entry" style="transition-delay:0.3s" onclick="tocJump('pg30')">
+        <span class="te-num">30</span>
+        <div class="te-body"><div class="te-title">Chapter Five: The Last Stand</div><div class="te-sub">The Prem Rath Revealed</div></div>
+        <span class="te-arrow">&#8594;</span>
       </div>
-      <div class="toc-row" onclick="jumpTo('pg39')">
-        <span class="toc-num">39</span>
-        <div class="toc-info">
-          <div class="ti-lbl">Music Video</div>
-          <div class="ti-sub">Ready 2 Love</div>
-        </div>
+      <div class="toc-entry" style="transition-delay:0.35s" onclick="tocJump('pg39')">
+        <span class="te-num">39</span>
+        <div class="te-body"><div class="te-title">Music Video</div><div class="te-sub">Ready 2 Love</div></div>
+        <span class="te-arrow">&#8594;</span>
       </div>
-      <div class="toc-row" onclick="jumpTo('pg40')">
-        <span class="toc-num">40</span>
-        <div class="toc-info">
-          <div class="ti-lbl">Lyrics: Ready 2 Love</div>
-          <div class="ti-sub">The Music</div>
-        </div>
+      <div class="toc-entry" style="transition-delay:0.4s" onclick="tocJump('pg40')">
+        <span class="te-num">40</span>
+        <div class="te-body"><div class="te-title">Lyrics: Ready 2 Love</div><div class="te-sub">The Music</div></div>
+        <span class="te-arrow">&#8594;</span>
       </div>
-      <div class="toc-row" onclick="jumpTo('pg41')">
-        <span class="toc-num">41</span>
-        <div class="toc-info">
-          <div class="ti-lbl">Team & Inspiration</div>
-          <div class="ti-sub">The Collective</div>
-        </div>
+      <div class="toc-entry" style="transition-delay:0.45s" onclick="tocJump('pg42')">
+        <span class="te-num">42</span>
+        <div class="te-body"><div class="te-title">Coming Soon: Book 2</div><div class="te-sub">Wrath of Shadows</div></div>
+        <span class="te-arrow">&#8594;</span>
       </div>
-      <div class="toc-row" onclick="jumpTo('pg42')">
-        <span class="toc-num">42</span>
-        <div class="toc-info">
-          <div class="ti-lbl">Coming Soon: Book 2</div>
-          <div class="ti-sub">Wrath of Shadows</div>
-        </div>
+      <div class="toc-entry" style="transition-delay:0.5s" onclick="tocJump('pg47')">
+        <span class="te-num">47</span>
+        <div class="te-body"><div class="te-title">Final Note from Roni</div><div class="te-sub">The Dream Continues</div></div>
+        <span class="te-arrow">&#8594;</span>
       </div>
-      <div class="toc-row" onclick="jumpTo('pg47')">
-        <span class="toc-num">47</span>
-        <div class="toc-info">
-          <div class="ti-lbl">Final Note</div>
-          <div class="ti-sub">From Roni</div>
-        </div>
+      <div class="toc-entry" style="transition-delay:0.55s" onclick="tocJump('pg48')">
+        <span class="te-num">48</span>
+        <div class="te-body"><div class="te-title">Stay Connected</div><div class="te-sub">Email Signup</div></div>
+        <span class="te-arrow">&#8594;</span>
       </div>
-      <div class="toc-row" onclick="jumpTo('pg48')">
-        <span class="toc-num">48</span>
-        <div class="toc-info">
-          <div class="ti-lbl">Stay Connected</div>
-          <div class="ti-sub">Email Signup</div>
-        </div>
-      </div>
+    </div>
+    <button class="toc-close-btn" onclick="toggleTOC()">&#10005; &nbsp; Close</button>
   </div>
 </div>
 
@@ -587,7 +568,6 @@ const flares=[
 ];
 
 let rot=0,t=0;
-let absorbing=false,absorbT=0,absorbDone=false;
 
 function drawEye(){
   const W=EC.width,H=EC.height;
@@ -595,57 +575,6 @@ function drawEye(){
   const R=Math.min(W,H)*0.38; // nebula radius
   cx.clearRect(0,0,W,H);
   t++;rot+=0.0008;
-
-  // ── BLACK HOLE ABSORPTION
-  if(absorbing){
-    absorbT+=0.022; // controls speed — 0=start, 1=done
-    const ease=absorbT<1?absorbT:1;
-    const suck=Math.pow(ease,2.2); // accelerates toward end
-
-    // Shrink the nebula radius as we get sucked in
-    const shrink=1-suck*0.85;
-    // Rotate faster as we spiral in
-    rot+=suck*0.08;
-    // Pull all dust inward
-    dust.forEach(d=>{d.r=Math.max(0,d.r*(1-suck*0.04));});
-    cyans.forEach(s=>{s.r=Math.max(0,s.r*(1-suck*0.04));});
-
-    // At the singularity moment, fill with expanding black circle
-    if(ease>0.6){
-      const bProgress=(ease-0.6)/0.4; // 0→1 in final 40%
-      const blackR=Math.max(W,H)*2*Math.pow(bProgress,1.8);
-      cx.save();
-      cx.beginPath();cx.arc(CX,CY,blackR,0,Math.PI*2);
-      cx.fillStyle=`rgba(0,0,0,${Math.min(1,bProgress*2.5)})`;
-      cx.fill();
-      cx.restore();
-    }
-
-    if(ease>=1&&!absorbDone){
-      absorbDone=true;
-      // Black screen — now reveal the book
-      setTimeout(()=>{
-        document.getElementById('landing').style.display='none';
-        document.getElementById('book').classList.add('open');
-      },80);
-      return; // stop drawing
-    }
-
-    // Override R with shrinking version for rest of draw
-    // (we patch by scaling the whole canvas context)
-    cx.save();
-    cx.translate(CX,CY);
-    cx.scale(shrink+(1-shrink)*0.15,shrink+(1-shrink)*0.15);
-    cx.translate(-CX,-CY);
-    // Draw a slight spiral warp overlay
-    const warpAlpha=suck*0.35;
-    const warpG=cx.createRadialGradient(CX,CY,0,CX,CY,R*0.9);
-    warpG.addColorStop(0,`rgba(0,0,0,${warpAlpha*1.5})`);
-    warpG.addColorStop(0.5,`rgba(0,0,0,${warpAlpha*0.3})`);
-    warpG.addColorStop(1,'rgba(0,0,0,0)');
-    cx.fillStyle=warpG;cx.fillRect(0,0,W,H);
-    cx.restore();
-  }
 
   // ── Deep space background
   const bg=cx.createRadialGradient(CX,CY,0,CX,CY,Math.max(W,H)*0.75);
@@ -822,19 +751,22 @@ function jumpTo(id){
 }
 
 function enterBook(){
-  if(absorbing)return;
-  absorbing=true;
-  absorbT=0;
-  absorbDone=false;
-  // Hide the text/button immediately so only the nebula absorbs
-  document.getElementById('hero-content').style.transition='opacity 0.3s';
-  document.getElementById('hero-content').style.opacity='0';
-  // Landing stays visible (transparent bg) while canvas absorbs
-  // book reveal happens inside drawEye when absorbDone
+  document.getElementById('landing').classList.add('gone');
+  setTimeout(()=>{
+    document.getElementById('landing').style.display='none';
+    document.getElementById('book').classList.add('open');
+  },1400);
 }
 
 function toggleTOC(){
-  document.getElementById('toc-overlay').classList.toggle('open');
+  const ov=document.getElementById('toc-overlay');
+  const opening=!ov.classList.contains('open');
+  ov.classList.toggle('open');
+  if(opening){startTOCCanvas();}else{stopTOCCanvas();}
+}
+function tocJump(pg){
+  toggleTOC();
+  setTimeout(()=>jumpTo(pg),400);
 }
 
 let currentAudio=null,currentBtn=null;
@@ -875,6 +807,133 @@ document.addEventListener('keydown',e=>{
   if(e.key==='ArrowLeft')turn(-1);
   if(e.key==='Escape'&&document.getElementById('toc-overlay').classList.contains('open'))toggleTOC();
 });
+
+
+// ── TOC CANVAS ENGINE ──
+let tocRAF=null,tocT=0;
+function startTOCCanvas(){
+  const TC=document.getElementById('toc-canvas');
+  if(!TC)return;
+  TC.width=window.innerWidth;TC.height=window.innerHeight;
+  const tc=TC.getContext('2d');
+
+  // Re-use same particle sets as eye canvas but lighter
+  const tdust=Array.from({length:300},()=>({
+    a:Math.random()*Math.PI*2,
+    r:20+Math.random()*Math.min(window.innerWidth,window.innerHeight)*0.55,
+    size:0.3+Math.random()*1.2,
+    op:0.12+Math.random()*0.5,
+    drift:(Math.random()-0.5)*0.0001,
+    tsp:0.005+Math.random()*0.02,
+    tph:Math.random()*Math.PI*2,
+    col:Math.random()<0.35?'255,180,60':Math.random()<0.5?'180,100,220':'200,210,255'
+  }));
+  const tcyans=Array.from({length:22},()=>({
+    a:Math.random()*Math.PI*2,
+    r:Math.min(window.innerWidth,window.innerHeight)*(0.1+Math.random()*0.48),
+    sz:0.8+Math.random()*1.8,
+    op:0.4+Math.random()*0.5,
+    tsp:0.004+Math.random()*0.016,
+    tph:Math.random()*Math.PI*2,
+    drift:(Math.random()-0.5)*0.00007,
+  }));
+
+  let tr=0;
+  function drawTOC(){
+    if(!document.getElementById('toc-overlay').classList.contains('open')){return;}
+    const W=TC.width,H=TC.height,CX=W/2,CY=H/2;
+    const R=Math.min(W,H)*0.36;
+    tocT++;tr+=0.0006;
+    tc.clearRect(0,0,W,H);
+
+    // Deep space bg
+    const bg=tc.createRadialGradient(CX,CY,0,CX,CY,Math.max(W,H)*0.75);
+    bg.addColorStop(0,'#080215');bg.addColorStop(0.5,'#030110');bg.addColorStop(1,'#010008');
+    tc.fillStyle=bg;tc.fillRect(0,0,W,H);
+
+    // Outer maroon glow
+    const og=tc.createRadialGradient(CX,CY,R*0.6,CX,CY,R*1.5);
+    og.addColorStop(0,'rgba(0,0,0,0)');
+    og.addColorStop(0.5,'rgba(60,8,18,0.2)');
+    og.addColorStop(1,'rgba(0,0,0,0)');
+    tc.fillStyle=og;tc.fillRect(0,0,W,H);
+
+    // Rotating maroon ring (subtle, behind content)
+    tc.save();tc.translate(CX,CY);tc.rotate(tr);
+    const rr=tc.createRadialGradient(0,0,R*0.7,0,0,R*1.08);
+    rr.addColorStop(0,'rgba(0,0,0,0)');
+    rr.addColorStop(0.5,'rgba(100,12,22,0.22)');
+    rr.addColorStop(0.75,'rgba(130,18,28,0.32)');
+    rr.addColorStop(1,'rgba(0,0,0,0)');
+    tc.fillStyle=rr;tc.beginPath();tc.arc(0,0,R*1.12,0,Math.PI*2);tc.fill();
+    tc.restore();
+
+    // Gold ring (very soft)
+    tc.save();tc.translate(CX,CY);tc.rotate(-tr*0.5);
+    const goldPulse=1+Math.sin(tocT*0.01)*0.03;
+    const gr=tc.createRadialGradient(0,0,R*0.58,0,0,R*0.95);
+    gr.addColorStop(0,'rgba(0,0,0,0)');
+    gr.addColorStop(0.4,'rgba(180,90,0,0.08)');
+    gr.addColorStop(0.65,'rgba(245,160,0,0.22)');
+    gr.addColorStop(0.82,'rgba(200,110,0,0.15)');
+    gr.addColorStop(1,'rgba(0,0,0,0)');
+    tc.fillStyle=gr;tc.beginPath();tc.arc(0,0,R*goldPulse,0,Math.PI*2);tc.fill();
+    tc.restore();
+
+    // Blue-violet center
+    tc.save();tc.translate(CX,CY);
+    const breathe=1+Math.sin(tocT*0.008)*0.04;
+    const inner=tc.createRadialGradient(0,0,0,0,0,R*0.6*breathe);
+    inner.addColorStop(0,'rgba(120,140,220,0.12)');
+    inner.addColorStop(0.4,'rgba(70,60,160,0.18)');
+    inner.addColorStop(0.75,'rgba(40,20,100,0.15)');
+    inner.addColorStop(1,'rgba(0,0,0,0)');
+    tc.fillStyle=inner;tc.beginPath();tc.arc(0,0,R*0.65*breathe,0,Math.PI*2);tc.fill();
+    tc.restore();
+
+    // Stardust
+    tdust.forEach(d=>{
+      d.a+=d.drift;d.tph+=d.tsp;
+      const x=CX+Math.cos(d.a)*d.r,y=CY+Math.sin(d.a)*d.r;
+      const alpha=d.op*(0.5+0.5*Math.sin(d.tph));
+      tc.globalAlpha=Math.max(0,alpha);
+      tc.fillStyle=`rgba(${d.col},1)`;
+      tc.beginPath();tc.arc(x,y,d.size,0,Math.PI*2);tc.fill();
+    });
+
+    // Cyan stars
+    tcyans.forEach(s=>{
+      s.a+=s.drift;s.tph+=s.tsp;
+      const x=CX+Math.cos(s.a)*s.r,y=CY+Math.sin(s.a)*s.r;
+      const tw=0.4+0.6*Math.abs(Math.sin(s.tph));
+      const op=s.op*tw;
+      tc.save();
+      const g=tc.createRadialGradient(x,y,0,x,y,s.sz*6);
+      g.addColorStop(0,`rgba(100,255,220,${op*0.4})`);
+      g.addColorStop(1,'rgba(0,200,180,0)');
+      tc.fillStyle=g;tc.beginPath();tc.arc(x,y,s.sz*6,0,Math.PI*2);tc.fill();
+      tc.restore();
+      tc.globalAlpha=op;
+      tc.fillStyle='#bbffee';
+      tc.beginPath();tc.arc(x,y,s.sz,0,Math.PI*2);tc.fill();
+      if(tw>0.72){
+        tc.globalAlpha=op*0.65;
+        tc.strokeStyle='#55ffdd';tc.lineWidth=0.5;
+        const ray=s.sz*5*tw;
+        tc.beginPath();tc.moveTo(x-ray,y);tc.lineTo(x+ray,y);
+        tc.moveTo(x,y-ray);tc.lineTo(x,y+ray);tc.stroke();
+      }
+    });
+
+    tc.globalAlpha=1;
+    tocRAF=requestAnimationFrame(drawTOC);
+  }
+  tocRAF=requestAnimationFrame(drawTOC);
+}
+function stopTOCCanvas(){
+  if(tocRAF){cancelAnimationFrame(tocRAF);tocRAF=null;}
+}
+
 </script>
 </body>
 </html>
