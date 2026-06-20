@@ -577,42 +577,130 @@ function drawEye(){
   cx.clearRect(0,0,W,H);
   t++;rot+=0.0008;
 
-  // ── BLACK HOLE ABSORPTION ──
+  // ══ EXTREME BLACK HOLE ══
   if(absorbing){
-    absorbT+=0.018;
+    absorbT+=0.012;
     const ease=Math.min(absorbT,1);
-    const suck=Math.pow(ease,2.4);
-    rot+=suck*0.12;
-    dust.forEach(d=>{d.r*=(1-suck*0.035);});
-    cyans.forEach(s=>{s.r*=(1-suck*0.035);});
-    const shrink=1-suck*0.82;
+    const suck=ease<0.5?4*ease*ease*ease:1-Math.pow(-2*ease+2,3)/2;
+
+    // black base
+    cx.fillStyle='#000';cx.fillRect(0,0,W,H);
+
+    // rotation accelerates violently
+    rot+=0.002+suck*0.4;
+
+    // pull particles inward + spiral
+    dust.forEach(d=>{d.r=Math.max(0,d.r-suck*10);d.a+=suck*0.1;d.tph+=d.tsp;});
+    cyans.forEach(s=>{s.r=Math.max(0,s.r-suck*8);s.a+=suck*0.08;s.tph+=s.tsp;});
+
+    // ── nebula shrinks toward singularity
+    const scale=Math.max(0.001,1-suck*0.98);
     cx.save();
-    cx.translate(CX,CY);cx.scale(shrink,shrink);cx.translate(-CX,-CY);
-    if(suck>0.1){
-      const warp=cx.createRadialGradient(CX,CY,0,CX,CY,R*1.2);
-      warp.addColorStop(0,`rgba(0,0,0,${suck*0.7})`);
-      warp.addColorStop(0.5,`rgba(0,0,0,${suck*0.2})`);
-      warp.addColorStop(1,'rgba(0,0,0,0)');
-      cx.fillStyle=warp;cx.fillRect(0,0,W,H);
+    cx.translate(CX,CY);cx.scale(scale,scale);cx.translate(-CX,-CY);
+
+    // draw nebula rings (reuse gradients)
+    const Rb=Math.min(W,H)*0.38;
+    // outer maroon
+    const rr=cx.createRadialGradient(CX,CY,Rb*0.7,CX,CY,Rb*1.1);
+    rr.addColorStop(0,'rgba(0,0,0,0)');
+    rr.addColorStop(0.5,'rgba(120,15,28,0.6)');
+    rr.addColorStop(1,'rgba(0,0,0,0)');
+    cx.fillStyle=rr;cx.beginPath();cx.arc(CX,CY,Rb*1.12,0,Math.PI*2);cx.fill();
+    // gold ring
+    const gr=cx.createRadialGradient(CX,CY,Rb*0.6,CX,CY,Rb*0.95);
+    gr.addColorStop(0,'rgba(0,0,0,0)');
+    gr.addColorStop(0.55,'rgba(255,165,0,0.8)');
+    gr.addColorStop(0.75,'rgba(245,200,50,0.9)');
+    gr.addColorStop(1,'rgba(0,0,0,0)');
+    cx.fillStyle=gr;cx.beginPath();cx.arc(CX,CY,Rb,0,Math.PI*2);cx.fill();
+    // blue center
+    const ic=cx.createRadialGradient(CX,CY,0,CX,CY,Rb*0.65);
+    ic.addColorStop(0,'rgba(160,180,255,0.3)');
+    ic.addColorStop(0.5,'rgba(70,60,180,0.5)');
+    ic.addColorStop(1,'rgba(0,0,0,0)');
+    cx.fillStyle=ic;cx.beginPath();cx.arc(CX,CY,Rb*0.68,0,Math.PI*2);cx.fill();
+
+    // stardust spiraling in
+    dust.forEach(d=>{
+      const x=CX+Math.cos(d.a)*d.r,y=CY+Math.sin(d.a)*d.r;
+      cx.globalAlpha=Math.max(0,d.op*(0.5+0.5*Math.sin(d.tph)));
+      cx.fillStyle=`rgba(${d.col},1)`;
+      cx.beginPath();cx.arc(x,y,d.size,0,Math.PI*2);cx.fill();
+    });
+    cyans.forEach(s=>{
+      const x=CX+Math.cos(s.a)*s.r,y=CY+Math.sin(s.a)*s.r;
+      cx.globalAlpha=s.op*Math.abs(Math.sin(s.tph));
+      cx.fillStyle='#bbffee';cx.beginPath();cx.arc(x,y,s.sz,0,Math.PI*2);cx.fill();
+    });
+    cx.globalAlpha=1;
+    cx.restore(); // end nebula scale
+
+    // ── screen shake
+    const shake=(suck>0.3)?(suck-0.3)*22:0;
+    const sx=(Math.random()-0.5)*shake, sy=(Math.random()-0.5)*shake;
+    cx.save();cx.translate(sx,sy);
+
+    // ── gravitational lensing glow ring
+    if(suck>0.08){
+      const lensR=Math.min(W,H)*0.38*(0.4+suck*0.8);
+      const lg=cx.createRadialGradient(CX,CY,lensR*0.75,CX,CY,lensR*1.15);
+      lg.addColorStop(0,'rgba(0,0,0,0)');
+      lg.addColorStop(0.4,`rgba(255,120,0,${suck*0.5})`);
+      lg.addColorStop(0.7,`rgba(255,60,0,${suck*0.3})`);
+      lg.addColorStop(1,'rgba(0,0,0,0)');
+      cx.fillStyle=lg;cx.beginPath();cx.arc(CX,CY,lensR*1.15,0,Math.PI*2);cx.fill();
     }
-    cx.restore();
-    if(ease>0.55){
-      const bp=Math.pow((ease-0.55)/0.45,1.6);
+
+    // ── accretion disk rings pulsing outward
+    if(suck>0.2){
+      const rings=Math.ceil(suck*6);
+      for(let i=0;i<rings;i++){
+        const rp=(t*0.06+i*0.33)%1;
+        const rRad=Math.min(W,H)*0.38*(0.05+rp*0.7)*scale;
+        const ra=Math.max(0,(1-rp)*suck*0.9);
+        cx.strokeStyle=i%2===0?`rgba(255,180,40,${ra})`:`rgba(255,255,180,${ra*0.7})`;
+        cx.lineWidth=1.5+suck*5;
+        cx.globalAlpha=ra;
+        cx.beginPath();cx.arc(CX+sx,CY+sy,rRad,0,Math.PI*2);cx.stroke();
+      }
+      cx.globalAlpha=1;cx.lineWidth=1;
+    }
+    cx.restore(); // end shake
+
+    // ── event horizon black circle expands from center
+    if(ease>0.42){
+      const bp=Math.pow((ease-0.42)/0.58,1.8);
       cx.save();
-      cx.beginPath();cx.arc(CX,CY,Math.max(W,H)*2.2*bp,0,Math.PI*2);
-      cx.fillStyle=`rgba(0,0,0,${Math.min(1,bp*2.2)})`;
+      cx.beginPath();cx.arc(CX,CY,Math.max(W,H)*2.8*bp,0,Math.PI*2);
+      cx.fillStyle=`rgba(0,0,0,${Math.min(1,bp*3)})`;
       cx.fill();
       cx.restore();
+
+      // white-hot singularity flash at center
+      if(bp>0.05&&bp<0.55){
+        const flash=(bp<0.3)?bp/0.3:(0.55-bp)/0.25;
+        const sg=cx.createRadialGradient(CX,CY,0,CX,CY,Math.min(W,H)*0.15*flash);
+        sg.addColorStop(0,`rgba(255,255,255,${flash})`);
+        sg.addColorStop(0.3,`rgba(255,200,80,${flash*0.7})`);
+        sg.addColorStop(1,'rgba(0,0,0,0)');
+        cx.fillStyle=sg;
+        cx.beginPath();cx.arc(CX,CY,Math.min(W,H)*0.15*flash,0,Math.PI*2);cx.fill();
+      }
     }
+
     if(ease>=1&&!absorbDone){
       absorbDone=true;
+      cx.fillStyle='#000';cx.fillRect(0,0,W,H);
       setTimeout(()=>{
         document.getElementById('landing').style.display='none';
         document.getElementById('book').classList.add('open');
-      },60);
-      return;
+      },80);
+    }else{
+      requestAnimationFrame(drawEye);
     }
+    return;
   }
+  // ── END BLACK HOLE — normal draw continues below ──
 
   // ── Deep space background
   const bg=cx.createRadialGradient(CX,CY,0,CX,CY,Math.max(W,H)*0.75);
@@ -792,7 +880,7 @@ function enterBook(){
   if(absorbing)return;
   absorbing=true;absorbT=0;absorbDone=false;
   const hc=document.getElementById('hero-content');
-  hc.style.transition='opacity 0.25s';
+  hc.style.transition='opacity 0.2s ease';
   hc.style.opacity='0';
   hc.style.pointerEvents='none';
 }
@@ -975,59 +1063,31 @@ function stopTOCCanvas(){
 
 </script>
 
-<!-- QA PREVIEW BADGE — auto-hides on live site -->
-<div id="qa-badge" style="
-  position:fixed;bottom:16px;left:16px;z-index:9999;
-  background:rgba(0,0,0,0.85);border:1px solid #f5c842;
-  font-family:monospace;font-size:11px;color:#f5c842;
-  padding:8px 12px;border-radius:4px;pointer-events:none;
-  line-height:1.6;
-">
-  <div style="font-weight:bold;margin-bottom:4px;">⚙ LOCAL PREVIEW</div>
-  <div id="qa-1" style="color:#888;">◯ nebula moving</div>
-  <div id="qa-2" style="color:#888;">◯ black hole fires</div>
-  <div id="qa-3" style="color:#888;">◯ TOC opens w/ stars</div>
-  <div id="qa-4" style="color:#888;">◯ TOC entry navigates</div>
-  <div style="margin-top:4px;color:#555;font-size:10px;">hidden on github.io</div>
+<div id="qa-badge" style="position:fixed;bottom:14px;left:14px;z-index:9999;background:rgba(0,0,0,0.92);border:1px solid #f5c842;font-family:monospace;font-size:11px;color:#f5c842;padding:9px 13px;border-radius:4px;pointer-events:none;line-height:1.9;">
+  <div style="font-weight:bold;letter-spacing:0.1em;margin-bottom:3px;">⚙ LOCAL QA — ALL 4 GREEN BEFORE PUSH</div>
+  <div id="qa-1" style="color:#444;">◯ nebula moving</div>
+  <div id="qa-2" style="color:#444;">◯ black hole fires</div>
+  <div id="qa-3" style="color:#444;">◯ TOC opens w/ stars</div>
+  <div id="qa-4" style="color:#444;">◯ TOC entry navigates</div>
 </div>
 <script>
-// Hide badge on live site
 (function(){
-  const host=location.hostname;
-  if(host&&host!=='localhost'&&host!=='127.0.0.1'&&host!==''){
-    const b=document.getElementById('qa-badge');
-    if(b)b.style.display='none';
+  const h=location.hostname;
+  if(h&&h!=='localhost'&&h!=='127.0.0.1'&&h!==''){
+    document.getElementById('qa-badge').style.display='none';return;
   }
-  // Auto-tick nebula check after 1s (if canvas is running, it's moving)
-  setTimeout(()=>{
-    const b=document.getElementById('qa-badge');
-    if(!b||b.style.display==='none')return;
-    const q1=document.getElementById('qa-1');
-    if(q1){q1.textContent='✓ nebula moving';q1.style.color='#4cff9f';}
-  },1000);
-  // Patch enterBook to tick qa-2
-  window._origEnterBook=window.enterBook;
-  window.enterBook=function(){
-    const q2=document.getElementById('qa-2');
-    if(q2){q2.textContent='✓ black hole fires';q2.style.color='#4cff9f';}
-    if(window._origEnterBook)window._origEnterBook();
-  };
-  // Patch toggleTOC to tick qa-3
-  window._origToggleTOC=window.toggleTOC;
-  window.toggleTOC=function(){
-    const q3=document.getElementById('qa-3');
-    if(q3){q3.textContent='✓ TOC opens w/ stars';q3.style.color='#4cff9f';}
-    if(window._origToggleTOC)window._origToggleTOC();
-  };
-  // Patch tocJump to tick qa-4
-  window._origTocJump=window.tocJump;
-  window.tocJump=function(pg){
-    const q4=document.getElementById('qa-4');
-    if(q4){q4.textContent='✓ TOC entry navigates';q4.style.color='#4cff9f';}
-    if(window._origTocJump)window._origTocJump(pg);
-  };
+  setTimeout(()=>{tick('qa-1','nebula moving');},1200);
+  const _eb=window.enterBook;
+  window.enterBook=function(){tick('qa-2','black hole fires');if(_eb)_eb();};
+  const _toc=window.toggleTOC;
+  window.toggleTOC=function(){tick('qa-3','TOC opens w/ stars');if(_toc)_toc();};
+  const _tj=window.tocJump;
+  window.tocJump=function(p){tick('qa-4','TOC entry navigates');if(_tj)_tj(p);};
+  function tick(id,label){
+    const el=document.getElementById(id);
+    if(el){el.textContent='✓ '+label;el.style.color='#4cff9f';}
+  }
 })();
 </script>
-
 </body>
 </html>
