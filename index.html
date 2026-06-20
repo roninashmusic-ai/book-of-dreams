@@ -1254,6 +1254,6 @@ function startDream(){
   }
 })();
 </script>
-<script>var _heroAudio=null;var _heroStarted=false;function startHeroAudio(){if(_heroStarted)return;_heroStarted=true;_heroAudio=new Audio("hero.mp3");_heroAudio.volume=1.0;_heroAudio.play().then(function(){}).catch(function(e){console.log("hero audio blocked:",e);});}window.stopHeroAudio=function(){if(_heroAudio){_heroAudio.pause();_heroAudio.currentTime=0;_heroAudio=null;}};</script>
+<script>var _heroAudio=new Audio("hero.mp3");_heroAudio.volume=1.0;_heroAudio.loop=false;var _heroStarted=false;function startHeroAudio(){if(_heroStarted)return;_heroStarted=true;_heroAudio.play().catch(function(){});}window.stopHeroAudio=function(){_heroAudio.pause();_heroAudio.currentTime=0;};_heroAudio.play().catch(function(){document.addEventListener("mousemove",function(){startHeroAudio();},{once:true});document.addEventListener("touchstart",function(){startHeroAudio();},{once:true});});</script>
 </body>
 </html>
