@@ -918,7 +918,10 @@ function tocJump(pg){
   stopTOCCanvas();
   document.getElementById('toc-overlay').classList.remove('open');
   document.getElementById('book').classList.add('open');
-  setTimeout(()=>jumpTo(pg),420);
+  setTimeout(()=>{
+    const idx=allPages.findIndex(p=>p.id===pg);
+    if(idx>=0)goTo(idx,idx>cur?'left':'right');
+  },420);
 }
 function tocSkip(){
   const m=document.getElementById('toc-music');
