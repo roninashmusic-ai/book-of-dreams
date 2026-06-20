@@ -320,23 +320,8 @@ canvas{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-ind
   </div>
   <div class="page" id="pg35">
     <div class="page-card">
-      <div class="video-page">
-        <div class="video-header">
-          <span class="vid-eye">Ready 2 Love · Music Video</span>
-          <div class="vid-title">THE MUSIC VIDEO</div>
-          <div class="vid-sub">© Immersive Audio · Mastered in Dolby Atmos at Abbey Road Studios</div>
-        </div>
-        <div class="video-container">
-          <iframe
-            src="https://www.youtube.com/embed/ls75r4ih8oE?rel=0&modestbranding=1&showinfo=0&color=white"
-            title="Roni Nash — Ready 2 Love"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen>
-          </iframe>
-        </div>
-        <div class="vid-note">A Roni Nash Dream Production · Ecliptia's Dawn</div>
-      </div>
+      <img class="page-img" src="page_35.png" alt="Page 35"/>
+      <div class="audio-overlay"><button class="audio-btn" onclick="playAudio(this,'CH 5 pg 31.mp3')"><span class="tri"></span><span class="btn-label">Play Narration</span></button></div>
       <span class="pg-num">Page 35</span>
     </div>
   </div>
@@ -361,7 +346,23 @@ canvas{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-ind
   </div>
   <div class="page" id="pg39">
     <div class="page-card">
-      <img class="page-img" src="page_39.png" alt="Page 39"/>
+      <div class="video-page">
+        <div class="video-header">
+          <span class="vid-eye">Ready 2 Love · Music Video</span>
+          <div class="vid-title">THE MUSIC VIDEO</div>
+          <div class="vid-sub">© Immersive Audio · Mastered in Dolby Atmos at Abbey Road Studios</div>
+        </div>
+        <div class="video-container">
+          <iframe
+            src="https://www.youtube.com/embed/ls75r4ih8oE?rel=0&modestbranding=1&showinfo=0&color=white"
+            title="Roni Nash — Ready 2 Love"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+          </iframe>
+        </div>
+        <div class="vid-note">A Roni Nash Dream Production · Ecliptia's Dawn</div>
+      </div>
       <span class="pg-num">Page 39</span>
     </div>
   </div>
@@ -488,7 +489,7 @@ canvas{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-ind
           <div class="ti-sub">The Prem Rath Revealed</div>
         </div>
       </div>
-      <div class="toc-row" onclick="jumpTo('pg35')">
+      <div class="toc-row" onclick="jumpTo('pg39')">
         <span class="toc-num">39</span>
         <div class="toc-info">
           <div class="ti-lbl">Music Video</div>
