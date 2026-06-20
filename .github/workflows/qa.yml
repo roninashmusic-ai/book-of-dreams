@@ -1,0 +1,14 @@
+name: QA Check
+on:
+  push:
+    branches: [main]
+jobs:
+  qa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run QA checks
+        run: python3 qa.py
+      - name: Confirm deploy
+        if: success()
+        run: echo QA passed - site is deploying
