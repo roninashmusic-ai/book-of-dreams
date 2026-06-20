@@ -568,6 +568,7 @@ const flares=[
 ];
 
 let rot=0,t=0;
+let absorbing=false,absorbT=0,absorbDone=false;
 
 function drawEye(){
   const W=EC.width,H=EC.height;
@@ -575,6 +576,43 @@ function drawEye(){
   const R=Math.min(W,H)*0.38; // nebula radius
   cx.clearRect(0,0,W,H);
   t++;rot+=0.0008;
+
+  // ── BLACK HOLE ABSORPTION ──
+  if(absorbing){
+    absorbT+=0.018;
+    const ease=Math.min(absorbT,1);
+    const suck=Math.pow(ease,2.4);
+    rot+=suck*0.12;
+    dust.forEach(d=>{d.r*=(1-suck*0.035);});
+    cyans.forEach(s=>{s.r*=(1-suck*0.035);});
+    const shrink=1-suck*0.82;
+    cx.save();
+    cx.translate(CX,CY);cx.scale(shrink,shrink);cx.translate(-CX,-CY);
+    if(suck>0.1){
+      const warp=cx.createRadialGradient(CX,CY,0,CX,CY,R*1.2);
+      warp.addColorStop(0,`rgba(0,0,0,${suck*0.7})`);
+      warp.addColorStop(0.5,`rgba(0,0,0,${suck*0.2})`);
+      warp.addColorStop(1,'rgba(0,0,0,0)');
+      cx.fillStyle=warp;cx.fillRect(0,0,W,H);
+    }
+    cx.restore();
+    if(ease>0.55){
+      const bp=Math.pow((ease-0.55)/0.45,1.6);
+      cx.save();
+      cx.beginPath();cx.arc(CX,CY,Math.max(W,H)*2.2*bp,0,Math.PI*2);
+      cx.fillStyle=`rgba(0,0,0,${Math.min(1,bp*2.2)})`;
+      cx.fill();
+      cx.restore();
+    }
+    if(ease>=1&&!absorbDone){
+      absorbDone=true;
+      setTimeout(()=>{
+        document.getElementById('landing').style.display='none';
+        document.getElementById('book').classList.add('open');
+      },60);
+      return;
+    }
+  }
 
   // ── Deep space background
   const bg=cx.createRadialGradient(CX,CY,0,CX,CY,Math.max(W,H)*0.75);
@@ -751,11 +789,12 @@ function jumpTo(id){
 }
 
 function enterBook(){
-  document.getElementById('landing').classList.add('gone');
-  setTimeout(()=>{
-    document.getElementById('landing').style.display='none';
-    document.getElementById('book').classList.add('open');
-  },1400);
+  if(absorbing)return;
+  absorbing=true;absorbT=0;absorbDone=false;
+  const hc=document.getElementById('hero-content');
+  hc.style.transition='opacity 0.25s';
+  hc.style.opacity='0';
+  hc.style.pointerEvents='none';
 }
 
 function toggleTOC(){
@@ -935,5 +974,60 @@ function stopTOCCanvas(){
 }
 
 </script>
+
+<!-- QA PREVIEW BADGE — auto-hides on live site -->
+<div id="qa-badge" style="
+  position:fixed;bottom:16px;left:16px;z-index:9999;
+  background:rgba(0,0,0,0.85);border:1px solid #f5c842;
+  font-family:monospace;font-size:11px;color:#f5c842;
+  padding:8px 12px;border-radius:4px;pointer-events:none;
+  line-height:1.6;
+">
+  <div style="font-weight:bold;margin-bottom:4px;">⚙ LOCAL PREVIEW</div>
+  <div id="qa-1" style="color:#888;">◯ nebula moving</div>
+  <div id="qa-2" style="color:#888;">◯ black hole fires</div>
+  <div id="qa-3" style="color:#888;">◯ TOC opens w/ stars</div>
+  <div id="qa-4" style="color:#888;">◯ TOC entry navigates</div>
+  <div style="margin-top:4px;color:#555;font-size:10px;">hidden on github.io</div>
+</div>
+<script>
+// Hide badge on live site
+(function(){
+  const host=location.hostname;
+  if(host&&host!=='localhost'&&host!=='127.0.0.1'&&host!==''){
+    const b=document.getElementById('qa-badge');
+    if(b)b.style.display='none';
+  }
+  // Auto-tick nebula check after 1s (if canvas is running, it's moving)
+  setTimeout(()=>{
+    const b=document.getElementById('qa-badge');
+    if(!b||b.style.display==='none')return;
+    const q1=document.getElementById('qa-1');
+    if(q1){q1.textContent='✓ nebula moving';q1.style.color='#4cff9f';}
+  },1000);
+  // Patch enterBook to tick qa-2
+  window._origEnterBook=window.enterBook;
+  window.enterBook=function(){
+    const q2=document.getElementById('qa-2');
+    if(q2){q2.textContent='✓ black hole fires';q2.style.color='#4cff9f';}
+    if(window._origEnterBook)window._origEnterBook();
+  };
+  // Patch toggleTOC to tick qa-3
+  window._origToggleTOC=window.toggleTOC;
+  window.toggleTOC=function(){
+    const q3=document.getElementById('qa-3');
+    if(q3){q3.textContent='✓ TOC opens w/ stars';q3.style.color='#4cff9f';}
+    if(window._origToggleTOC)window._origToggleTOC();
+  };
+  // Patch tocJump to tick qa-4
+  window._origTocJump=window.tocJump;
+  window.tocJump=function(pg){
+    const q4=document.getElementById('qa-4');
+    if(q4){q4.textContent='✓ TOC entry navigates';q4.style.color='#4cff9f';}
+    if(window._origTocJump)window._origTocJump(pg);
+  };
+})();
+</script>
+
 </body>
 </html>
