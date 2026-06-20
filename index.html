@@ -912,7 +912,7 @@ function jumpTo(id){
   toggleTOC();
 }
 
-function enterBook(){stopHeroAudio();
+function enterBook(){if(window.stopHeroAudio)window.stopHeroAudio();
   if(absorbing)return;
   // Fire enter sound immediately on click
   const es=new Audio('Enter_Sound.mp3');
@@ -1190,6 +1190,6 @@ function startDream(){
   }
 })();
 </script>
-<script>var _heroAudio=null;var _heroStarted=false;function startHeroAudio(){if(_heroStarted)return;_heroStarted=true;_heroAudio=new Audio("hero.mp3");_heroAudio.volume=0.7;_heroAudio.play().catch(function(){});}function stopHeroAudio(){if(_heroAudio){_heroAudio.pause();_heroAudio.currentTime=0;_heroAudio=null;}}document.body.addEventListener("click",function(e){if(!e.target.closest(".l-btn"))startHeroAudio();},{once:true});</script>
+<script>var _heroAudio=null;var _heroStarted=false;function startHeroAudio(){if(_heroStarted)return;_heroStarted=true;_heroAudio=new Audio("hero.mp3");_heroAudio.volume=0.7;_heroAudio.play().catch(function(){});}window.stopHeroAudio=function(){if(_heroAudio){_heroAudio.pause();_heroAudio.currentTime=0;_heroAudio=null;}};document.body.addEventListener("click",function(e){if(!e.target.closest(".l-btn"))startHeroAudio();},{once:true});</script>
 </body>
 </html>
