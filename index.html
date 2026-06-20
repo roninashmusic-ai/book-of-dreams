@@ -1190,6 +1190,6 @@ function startDream(){
   }
 })();
 </script>
-<script>window.addEventListener("load",function(){var a=new Audio("hero.mp3");a.play().catch(function(){});});</script>
+<script>var _heroPlayed=false;document.addEventListener("click",function(){if(!_heroPlayed){_heroPlayed=true;var a=new Audio("hero.mp3");a.play().catch(function(){});}},{ once: true });</script>
 </body>
 </html>
