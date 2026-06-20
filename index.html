@@ -124,7 +124,7 @@ html,body{width:100%;height:100%;background:var(--deep);color:#fff;font-family:'
   </div>
   <div id="viewport">
 
-  <div class="page active" id="pg1">
+  <div class="page" id="pg1">
     <div class="page-card">
       <img class="page-img" src="page_1.png" alt="Page 1"/>
       <div class="audio-overlay"><button class="audio-btn" onclick="playAudio(this,'Ecliptia Book 1 Overview.mp3')"><span class="tri"></span><span class="btn-label">Play Narration</span></button></div>
@@ -137,7 +137,7 @@ html,body{width:100%;height:100%;background:var(--deep);color:#fff;font-family:'
       <span class="pg-num">Page 3</span>
     </div>
   </div>
-  <div class="page" id="pg5">
+  <div class="page active" id="pg5">
     <div class="page-card">
       <img class="page-img" src="page_5.png" alt="Page 5"/>
       <span class="pg-num">Page 5</span>
@@ -469,7 +469,7 @@ html,body{width:100%;height:100%;background:var(--deep);color:#fff;font-family:'
     <h2 class="toc-headline">Book of Dreams</h2>
     <div class="toc-rule"></div>
     <div class="toc-entries">
-      <div class="toc-entry" style="transition-delay:0.05s" onclick="tocJump('pg1')">
+      <div class="toc-entry" style="transition-delay:0.05s" onclick="tocJump('pg5')">
         <span class="te-num">01</span>
         <div class="te-body"><div class="te-title">Welcome to My Dreams</div><div class="te-sub">Introduction</div></div>
         <span class="te-arrow">&#8594;</span>
@@ -527,7 +527,7 @@ html,body{width:100%;height:100%;background:var(--deep);color:#fff;font-family:'
     </div>
     <audio id="toc-music" loop style="display:none"><source src="Toc.mp3" type="audio/mpeg"></audio>
     <div style="display:flex;flex-direction:column;align-items:center;gap:0.6rem;margin-top:1.2rem;flex-shrink:0;">
-      <button class="l-btn" style="font-size:0.72rem;padding:0.85rem 2.6rem;margin:0;letter-spacing:0.3em;" onclick="tocJump('pg1')">&#9654; Begin from Page One</button>
+      <button class="l-btn" style="font-size:0.72rem;padding:0.85rem 2.6rem;margin:0;letter-spacing:0.3em;" onclick="tocJump('pg5')">&#9654; Begin from Page One</button>
       <div style="display:flex;gap:0.7rem;align-items:center;">
         <button id="toc-music-btn" onclick="toggleTOCMusic()" style="background:transparent;border:1px solid rgba(245,168,0,0.3);color:rgba(245,168,0,0.55);font-family:'Georgia',serif;font-size:0.58rem;letter-spacing:0.25em;text-transform:uppercase;padding:0.3rem 0.8rem;cursor:pointer;">Music</button>
         <button class="toc-close-btn" style="margin-top:0;" onclick="tocSkip()">&#10005; Skip to Book</button>
