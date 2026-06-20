@@ -912,7 +912,7 @@ function jumpTo(id){
   toggleTOC();
 }
 
-function enterBook(){if(window.stopHeroAudio)window.stopHeroAudio();
+function enterBook(){
   if(absorbing)return;
   // Fire enter sound immediately on click
   const es=new Audio('Enter_Sound.mp3');
@@ -931,7 +931,7 @@ function toggleTOC(){
   ov.classList.toggle('open');
   if(opening){
     startTOCCanvas();
-    const m=document.getElementById('toc-music');if(m)m.play().catch(()=>{});
+    if(window.stopHeroAudio)window.stopHeroAudio();
   }else{
     stopTOCCanvas();
     const m=document.getElementById('toc-music');if(m){m.pause();m.currentTime=0;}
