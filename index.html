@@ -142,7 +142,7 @@ html,body{width:100%;height:100%;background:var(--deep);color:#fff;font-family:'
     <div class="l-title">DREAMS</div>
     <p class="hero-sub">A Roni Nash Dream Production</p>
     <div class="l-line"></div>
-    <button class="l-btn" onclick="startHeroAudio();enterBook();" style="animation:enter-pulse 2s ease-in-out infinite;">&#9654;&nbsp; Enter the Dream</button>
+    <button class="l-btn" onclick="enterBook();" style="animation:enter-pulse 2s ease-in-out infinite;">&#9654;&nbsp; Enter the Dream</button>
   </div>
 </div>
 
@@ -523,8 +523,8 @@ html,body{width:100%;height:100%;background:var(--deep);color:#fff;font-family:'
         <div class="te-body"><div class="te-title">Chapter Four: The Battle Ignites</div><div class="te-sub">War for Ecliptia</div></div>
         <span class="te-arrow">&#8594;</span>
       </div>
-      <div class="toc-entry" style="transition-delay:0.3s" onclick="tocJump('pg39')">
-        <span class="te-num">39</span>
+      <div class="toc-entry" style="transition-delay:0.3s" onclick="tocJump('pg30')">
+        <span class="te-num">30</span>
         <div class="te-body"><div class="te-title">Chapter Five: The Last Stand</div><div class="te-sub">The Prem Rath Revealed</div></div>
         <span class="te-arrow">&#8594;</span>
       </div>
@@ -1223,7 +1223,7 @@ function startDream(){
   const gate=document.getElementById('signup-gate');
   gate.classList.add('gone');
   setTimeout(()=>{gate.style.display='none';},600);
-  const es=new Audio('Enter_Sound.mp3');es.play().catch(()=>{});
+  
   absorbing=true;absorbT=0;absorbDone=false;
 }
 </script>
