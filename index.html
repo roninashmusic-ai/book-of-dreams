@@ -472,12 +472,15 @@ html,body{width:100%;height:100%;background:var(--deep);color:#fff;font-family:'
     </div>
   </div>
   <div class="page" id="pg48">
-    <div class="page-card">
-      <img class="page-img" src="page_48.png" alt="Page 48"/>
-      <div class="signup-overlay">
+    <div class="page-card" style="position:relative;overflow:hidden;background:#000;">
+      <video autoplay muted loop playsinline style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:0;">
+        <source src="Ronnash_logo1.mp4" type="video/mp4"/>
+      </video>
+      <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(4,8,20,0.97) 40%,rgba(4,8,20,0.45) 100%);z-index:1;"></div>
+      <div class="signup-overlay" style="z-index:2;">
         <div class="signup-box">
-          <div class="su-title">BE FIRST TO KNOW</div>
-          <div class="su-sub">Book 2: The Wrath of Shadows</div>
+          <div class="su-title" style="font-size:1.4rem;margin-bottom:0.5rem;">Be the first to know...</div>
+          <div class="su-sub">Book 2: The Wrath of Shadows is coming</div>
           <div class="su-form">
             <input type="email" id="su-email" placeholder="your@email.com"/>
             <button onclick="handleSignup()">Notify Me</button>
@@ -485,7 +488,7 @@ html,body{width:100%;height:100%;background:var(--deep);color:#fff;font-family:'
           <div id="su-ok">You're on the list. Welcome to the dream.</div>
         </div>
       </div>
-      <span class="pg-num">Page 48</span>
+      <span class="pg-num" style="z-index:3;">Page 48</span>
     </div>
   </div>
   </div>
