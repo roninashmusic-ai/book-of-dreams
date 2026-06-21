@@ -142,7 +142,7 @@ html,body{width:100%;height:100%;background:var(--deep);color:#fff;font-family:'
     <div class="l-title">DREAMS</div>
     <p class="hero-sub">A Roni Nash Dream Production</p>
     <div class="l-line"></div>
-    <button class="l-btn" onclick="enterBook();" style="animation:enter-pulse 2s ease-in-out infinite;">&#9654;&nbsp; Enter the Dream</button>
+    <button class="l-btn" onclick="(function(){var s=new Audio('Enter_Sound.mp3');s.volume=1.0;s.play().catch(function(){});enterBook();})();" style="animation:enter-pulse 2s ease-in-out infinite;">&#9654;&nbsp; Enter the Dream</button>
   </div>
 </div>
 
@@ -995,10 +995,6 @@ function jumpTo(id){
 
 function enterBook(){
   if(absorbing)return;
-  // Fire enter sound immediately on click
-  const es=new Audio('Enter_Sound.mp3');
-  es.volume=1.0;
-  es.play().catch(()=>{});
   absorbing=true;absorbT=0;absorbDone=false;
   const hc=document.getElementById('hero-content');
   hc.style.transition='opacity 0.2s ease';
@@ -1273,6 +1269,6 @@ function startDream(){
   }
 })();
 </script>
-<script>var _heroAudio=new Audio("hero.mp3");_heroAudio.volume=1.0;_heroAudio.loop=false;var _heroStarted=false;window.stopHeroAudio=function(){_heroAudio.pause();_heroAudio.currentTime=0;};function _tryHero(){if(_heroStarted)return;_heroStarted=true;_heroAudio.play().catch(function(){});}document.addEventListener("click",function(){_tryHero();},{once:true});document.addEventListener("mousemove",function(){_tryHero();},{once:true});document.addEventListener("touchstart",function(){_tryHero();},{once:true});_heroAudio.play().catch(function(){});</script>
+<script>var _heroAudio=new Audio("hero.mp3");_heroAudio.volume=1.0;_heroAudio.loop=false;var _heroStarted=false;window.stopHeroAudio=function(){_heroAudio.pause();_heroAudio.currentTime=0;};function _tryHero(){if(_heroStarted)return;_heroStarted=true;_heroAudio.play().catch(function(){});}document.addEventListener("mousemove",function(){_tryHero();},{once:true});document.addEventListener("touchstart",function(){_tryHero();},{once:true});_heroAudio.play().catch(function(){});</script>
 </body>
 </html>
