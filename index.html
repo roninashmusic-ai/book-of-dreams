@@ -1095,29 +1095,83 @@ function drawEye(){
     }
   }
 
-  // ── Draw Star Blink ──
+  // Star Blink nova event
   if(sblink.active&&!absorbing){
     const s=cyans[sblink.idx];
     const CX2=EC.width/2,CY2=EC.height/2;
     const sx=CX2+Math.cos(s.a)*s.r,sy=CY2+Math.sin(s.a)*s.r;
-    if(sblink.phase==='brighten'){sblink.brightness=Math.min(6,sblink.brightness+0.08);if(sblink.brightness>=6)sblink.phase='hold';}
-    else if(sblink.phase==='hold'){setTimeout(()=>{sblink.phase='dim';},2200);sblink.phase='waiting';}
-    else if(sblink.phase==='dim'){sblink.brightness=Math.max(1,sblink.brightness-0.04);if(sblink.brightness<=1){sblink.active=false;sblink.phase='idle';}}
+    if(sblink.phase==='brighten'){
+      const rate=sblink.brightness<2?0.03:0.07;
+      sblink.brightness=Math.min(8,sblink.brightness+rate);
+      if(sblink.brightness>=8)sblink.phase='hold';
+    }
+    else if(sblink.phase==='hold'){setTimeout(()=>{sblink.phase='dim';},2800);sblink.phase='waiting';}
+    else if(sblink.phase==='dim'){
+      const flicker=0.02+Math.random()*0.06;
+      sblink.brightness=Math.max(1,sblink.brightness-flicker);
+      if(sblink.brightness<=1){sblink.active=false;sblink.phase='idle';}
+    }
     if(sblink.brightness>1){
       cx.save();
       const b=sblink.brightness;
-      const g=cx.createRadialGradient(sx,sy,0,sx,sy,s.sz*b*8);
-      g.addColorStop(0,`rgba(100,255,220,${Math.min(1,b*0.15)})`);g.addColorStop(1,'rgba(0,200,180,0)');
-      cx.fillStyle=g;cx.beginPath();cx.arc(sx,sy,s.sz*b*8,0,Math.PI*2);cx.fill();
-      cx.globalAlpha=Math.min(1,b*0.3);cx.fillStyle='#ffffff';
-      cx.beginPath();cx.arc(sx,sy,s.sz*Math.min(b,3),0,Math.PI*2);cx.fill();
-      cx.globalAlpha=Math.min(1,b*0.2);cx.strokeStyle='#bbffee';cx.lineWidth=0.8;
-      const ray=s.sz*b*6;
-      cx.beginPath();cx.moveTo(sx-ray,sy);cx.lineTo(sx+ray,sy);cx.moveTo(sx,sy-ray);cx.lineTo(sx,sy+ray);cx.stroke();
+      const shimmer=1+Math.sin(t*0.8)*0.08*(b>4?1:0);
+      const outerR=s.sz*b*18*shimmer;
+      const og=cx.createRadialGradient(sx,sy,0,sx,sy,outerR);
+      og.addColorStop(0,`rgba(255,240,180,${Math.min(0.12,b*0.015)})`);
+      og.addColorStop(0.3,`rgba(180,220,255,${Math.min(0.08,b*0.01)})`);
+      og.addColorStop(1,'rgba(0,0,0,0)');
+      cx.globalAlpha=1;cx.fillStyle=og;
+      cx.beginPath();cx.arc(sx,sy,outerR,0,Math.PI*2);cx.fill();
+      const midR=s.sz*b*9*shimmer;
+      const mg=cx.createRadialGradient(sx,sy,0,sx,sy,midR);
+      mg.addColorStop(0,`rgba(220,240,255,${Math.min(0.9,b*0.12)})`);
+      mg.addColorStop(0.4,`rgba(140,200,255,${Math.min(0.4,b*0.055)})`);
+      mg.addColorStop(1,'rgba(0,100,200,0)');
+      cx.fillStyle=mg;cx.beginPath();cx.arc(sx,sy,midR,0,Math.PI*2);cx.fill();
+      cx.globalAlpha=Math.min(1,b*0.18);
+      cx.fillStyle='rgba(255,255,255,1)';
+      cx.beginPath();cx.arc(sx,sy,s.sz*Math.min(b*0.6,3.5),0,Math.PI*2);cx.fill();
+      if(b>2){
+        const spikeAngles=[0,0.42,1.05,1.57,2.28,2.93,3.67,4.45,5.1,5.76];
+        const numSpikes=7;
+        cx.globalAlpha=Math.min(0.7,b*0.09);
+        for(let i=0;i<numSpikes;i++){
+          const ang=spikeAngles[i]+(i%2===0?Math.sin(t*0.03+i)*0.04:0);
+          const len=s.sz*b*(2.8+Math.sin(i*2.7+t*0.05)*1.4)*shimmer;
+          const sg=cx.createLinearGradient(
+            sx+Math.cos(ang)*s.sz,sy+Math.sin(ang)*s.sz,
+            sx+Math.cos(ang)*len,sy+Math.sin(ang)*len
+          );
+          sg.addColorStop(0,`rgba(255,255,255,${Math.min(0.9,b*0.12)})`);
+          sg.addColorStop(0.4,`rgba(180,220,255,${Math.min(0.4,b*0.06)})`);
+          sg.addColorStop(1,'rgba(100,180,255,0)');
+          cx.strokeStyle=sg;cx.lineWidth=0.4+Math.sin(i*1.3)*0.3;
+          cx.beginPath();
+          cx.moveTo(sx+Math.cos(ang)*s.sz*0.5,sy+Math.sin(ang)*s.sz*0.5);
+          cx.lineTo(sx+Math.cos(ang)*len,sy+Math.sin(ang)*len);
+          cx.stroke();
+          const oppLen=len*0.45;
+          const oppAng=ang+Math.PI;
+          cx.globalAlpha=Math.min(0.35,b*0.04);
+          cx.beginPath();
+          cx.moveTo(sx+Math.cos(oppAng)*s.sz*0.5,sy+Math.sin(oppAng)*s.sz*0.5);
+          cx.lineTo(sx+Math.cos(oppAng)*oppLen,sy+Math.sin(oppAng)*oppLen);
+          cx.stroke();
+          cx.globalAlpha=Math.min(0.7,b*0.09);
+        }
+      }
+      if(sblink.phase==='dim'||sblink.phase==='waiting'){
+        const agR=s.sz*12*(9-b);
+        const agg=cx.createRadialGradient(sx,sy,agR*0.7,sx,sy,agR);
+        agg.addColorStop(0,'rgba(100,180,255,0)');
+        agg.addColorStop(0.5,`rgba(80,160,220,${Math.min(0.12,(9-b)*0.015)})`);
+        agg.addColorStop(1,'rgba(0,0,0,0)');
+        cx.globalAlpha=1;cx.fillStyle=agg;
+        cx.beginPath();cx.arc(sx,sy,agR,0,Math.PI*2);cx.fill();
+      }
       cx.restore();
     }
   }
-
   requestAnimationFrame(drawEye);
 }
 drawEye();
