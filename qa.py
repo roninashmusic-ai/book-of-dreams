@@ -1,7 +1,8 @@
-import os, re
+import os, re, sys
 
-path = "/Users/crn/Downloads/book_of_dreams_CLEAN/index.html"
-folder = "/Users/crn/Downloads/book_of_dreams_CLEAN"
+# Works locally and on GitHub Actions
+folder = os.path.dirname(os.path.abspath(__file__))
+path = os.path.join(folder, 'index.html')
 
 with open(path) as f:
     html = f.read()
@@ -22,11 +23,19 @@ for src in audio_srcs:
         errors.append(f"Missing audio: {src}")
 if html.count('class="void-prompt"') > 1:
     errors.append("Duplicate void-prompt")
+if 'enterBook' not in html:
+    errors.append("Enter button missing")
+if 'id="toc-overlay"' not in html:
+    errors.append("TOC overlay missing")
+if 'id="book"' not in html:
+    errors.append("Book element missing")
+if 'hero.mp3' not in html:
+    errors.append("Hero audio missing")
 print(f"Pages: {len(page_ids)} | TOC: {len(toc_targets)} | Images: {len(img_srcs)} | Audio: {len(audio_srcs)}")
 if errors:
     print("ERRORS - DO NOT PUSH:")
     for e in errors: print(f"  - {e}")
-    exit(1)
+    sys.exit(1)
 else:
     print("ALL CHECKS PASSED - safe to push")
-    exit(0)
+    sys.exit(0)
