@@ -1075,7 +1075,7 @@ function playAudio(btn,src){
   };
 }
 
-function handleSignup(){
+function handleSignup(){_tryHero();
   const email=document.getElementById('su-email').value;
   if(!email||!email.includes('@'))return;
   document.getElementById('su-ok').style.display='block';
@@ -1233,7 +1233,7 @@ function submitSignup(){
   form.appendChild(inp);document.body.appendChild(form);form.submit();
   startDream();
 }
-function skipSignup(){ startDream(); }
+function skipSignup(){_tryHero(); startDream(); }
 function startDream(){
   const gate=document.getElementById('signup-gate');
   gate.classList.add('gone');
