@@ -634,6 +634,24 @@ const flares=[
 let rot=0,t=0;
 let absorbing=false,absorbT=0,absorbDone=false;
 
+// One-shot quasar streak across top
+const quasar={
+  active:true,
+  x:-80,
+  y:0,
+  speed:0,
+  opacity:1,
+  done:false
+};
+setTimeout(function(){
+  quasar.y = window.innerHeight*0.08 + Math.random()*window.innerHeight*0.12;
+  quasar.x = -80;
+  quasar.speed = 18 + Math.random()*10;
+  quasar.opacity = 1;
+  quasar.active = true;
+  quasar.done = false;
+}, 1200);
+
 function drawEye(){
   const W=EC.width,H=EC.height;
   const CX=W/2,CY=H/2;
@@ -964,6 +982,42 @@ function drawEye(){
   });
 
   cx.globalAlpha=1;
+  // ── One-shot quasar streak
+  if(quasar.active && !quasar.done && !absorbing){
+    quasar.x += quasar.speed;
+    if(quasar.x > W+200){ quasar.done=true; quasar.active=false; }
+    const tailLen = 180 + quasar.speed*8;
+    const qg = cx.createLinearGradient(quasar.x-tailLen, quasar.y, quasar.x+12, quasar.y);
+    qg.addColorStop(0, 'rgba(255,255,255,0)');
+    qg.addColorStop(0.5, 'rgba(180,220,255,0.18)');
+    qg.addColorStop(0.82, 'rgba(220,240,255,0.55)');
+    qg.addColorStop(1, 'rgba(255,255,255,0)');
+    cx.save();
+    cx.globalAlpha = quasar.opacity;
+    // tail
+    cx.strokeStyle = qg;
+    cx.lineWidth = 1.8;
+    cx.beginPath();
+    cx.moveTo(quasar.x - tailLen, quasar.y);
+    cx.lineTo(quasar.x, quasar.y);
+    cx.stroke();
+    // bright head glow
+    const hg = cx.createRadialGradient(quasar.x, quasar.y, 0, quasar.x, quasar.y, 14);
+    hg.addColorStop(0, 'rgba(255,255,255,0.95)');
+    hg.addColorStop(0.3, 'rgba(180,220,255,0.6)');
+    hg.addColorStop(1, 'rgba(100,180,255,0)');
+    cx.fillStyle = hg;
+    cx.beginPath();
+    cx.arc(quasar.x, quasar.y, 14, 0, Math.PI*2);
+    cx.fill();
+    // core dot
+    cx.fillStyle = 'rgba(255,255,255,1)';
+    cx.beginPath();
+    cx.arc(quasar.x, quasar.y, 1.8, 0, Math.PI*2);
+    cx.fill();
+    cx.restore();
+  }
+
   requestAnimationFrame(drawEye);
 }
 drawEye();
