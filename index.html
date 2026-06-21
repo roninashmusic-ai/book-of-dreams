@@ -1273,6 +1273,6 @@ function startDream(){
   }
 })();
 </script>
-<script>var _heroAudio=new Audio("hero.mp3");_heroAudio.volume=1.0;_heroAudio.loop=false;var _heroStarted=false;function startHeroAudio(){if(_heroStarted)return;_heroStarted=true;_heroAudio.play().catch(function(){});}window.stopHeroAudio=function(){_heroAudio.pause();_heroAudio.currentTime=0;};_heroAudio.play().catch(function(){document.addEventListener("mousemove",function(){startHeroAudio();},{once:true});document.addEventListener("touchstart",function(){startHeroAudio();},{once:true});});</script>
+<script>var _heroAudio=new Audio("hero.mp3");_heroAudio.volume=1.0;_heroAudio.loop=false;var _heroStarted=false;window.stopHeroAudio=function(){_heroAudio.pause();_heroAudio.currentTime=0;};function _tryHero(){if(_heroStarted)return;_heroStarted=true;_heroAudio.play().catch(function(){});}document.addEventListener("click",function(){_tryHero();},{once:true});document.addEventListener("mousemove",function(){_tryHero();},{once:true});document.addEventListener("touchstart",function(){_tryHero();},{once:true});_heroAudio.play().catch(function(){});</script>
 </body>
 </html>
