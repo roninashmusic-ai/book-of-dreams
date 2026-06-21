@@ -142,7 +142,7 @@ html,body{width:100%;height:100%;background:var(--deep);color:#fff;font-family:'
     <div class="l-title">DREAMS</div>
     <p class="hero-sub">A Roni Nash Dream Production</p>
     <div class="l-line"></div>
-    <button class="l-btn" onclick="(function(){var s=new Audio('Enter_Sound.mp3');s.volume=1.0;s.play().catch(function(){});enterBook();})();" style="animation:enter-pulse 2s ease-in-out infinite;">&#9654;&nbsp; Enter the Dream</button>
+    <button class="l-btn" onclick="(function(){try{var ctx=new AudioContext();var req=new XMLHttpRequest();req.open('GET','Enter_Sound.mp3',true);req.responseType='arraybuffer';req.onload=function(){ctx.decodeAudioData(req.response,function(buf){var src=ctx.createBufferSource();var gain=ctx.createGain();gain.gain.value=3.0;src.buffer=buf;src.connect(gain);gain.connect(ctx.destination);src.start(0);});};req.send();}catch(e){var s=new Audio('Enter_Sound.mp3');s.volume=1.0;s.play().catch(function(){});}enterBook();})();" style="animation:enter-pulse 2s ease-in-out infinite;">&#9654;&nbsp; Enter the Dream</button>
   </div>
 </div>
 
