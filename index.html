@@ -652,6 +652,39 @@ setTimeout(function(){
   quasar.done = false;
 }, 1200);
 
+// ── MYSTERY EVENTS SYSTEM ──
+// UAP (3I Atlas-style craft)
+const uap={active:false,x:0,y:0,vx:0,vy:0,angle:0,opacity:0,phase:'idle',size:7};
+function launchUAP(){
+  if(uap.active||absorbing)return;
+  uap.active=true;uap.phase='fadein';uap.opacity=0;
+  const W=EC.width,H=EC.height;
+  const edge=Math.floor(Math.random()*4);
+  const speed=0.6+Math.random()*0.5;
+  const ang=(Math.random()-0.5)*0.3;
+  if(edge===0){uap.x=-20;uap.y=H*0.15+Math.random()*H*0.7;uap.vx=speed;uap.vy=Math.sin(ang)*speed;uap.angle=ang;}
+  else if(edge===1){uap.x=W+20;uap.y=H*0.15+Math.random()*H*0.7;uap.vx=-speed;uap.vy=Math.sin(ang)*speed;uap.angle=Math.PI+ang;}
+  else if(edge===2){uap.x=W*0.15+Math.random()*W*0.7;uap.y=-20;uap.vx=Math.sin(ang)*speed;uap.vy=speed;uap.angle=Math.PI/2+ang;}
+  else{uap.x=W*0.15+Math.random()*W*0.7;uap.y=H+20;uap.vx=Math.sin(ang)*speed;uap.vy=-speed;uap.angle=-Math.PI/2+ang;}
+}
+setTimeout(()=>{launchUAP();},8000);
+setInterval(()=>{if(!absorbing)launchUAP();},25000);
+
+// Gravitational pulse
+const gpulse={active:false,r:0,opacity:0};
+function launchGPulse(){if(gpulse.active||absorbing)return;gpulse.active=true;gpulse.r=0;gpulse.opacity=0.7;}
+setTimeout(()=>{launchGPulse();},15000);
+setInterval(()=>{if(!absorbing)launchGPulse();},22000);
+
+// Star blink
+const sblink={active:false,idx:0,brightness:1,phase:'idle'};
+function launchStarBlink(){
+  if(sblink.active||absorbing)return;
+  sblink.active=true;sblink.phase='brighten';sblink.idx=Math.floor(Math.random()*cyans.length);sblink.brightness=1;
+}
+setTimeout(()=>{launchStarBlink();},12000);
+setInterval(()=>{if(!absorbing)launchStarBlink();},20000);
+
 function drawEye(){
   const W=EC.width,H=EC.height;
   const CX=W/2,CY=H/2;
