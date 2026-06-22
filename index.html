@@ -66,6 +66,15 @@ html,body{width:100%;height:100%;background:var(--deep);color:#fff;font-family:'
 #su-ok{display:none;font-size:0.72rem;color:rgba(90,175,212,0.9);margin-top:0.6rem;letter-spacing:0.1em;}
 #bot-bar{height:52px;background:rgba(2,4,12,0.85);backdrop-filter:blur(18px);border-top:0.5px solid rgba(74,127,160,0.18);display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;flex-shrink:0;z-index:60;}
 .arr{background:transparent;border:0.5px solid rgba(74,127,160,0.4);color:rgba(255,255,255,0.8);width:44px;height:36px;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;}
+.page-nav{position:fixed;top:50%;transform:translateY(-50%);z-index:50;background:none;border:none;cursor:pointer;color:rgba(255,255,255,0.28);font-size:2.8rem;line-height:1;padding:1rem 0.6rem;transition:color 0.3s,transform 0.3s;-webkit-tap-highlight-color:transparent;user-select:none;}
+.page-nav:hover{color:rgba(255,255,255,0.75);}
+.page-nav:active{color:rgba(255,255,255,0.95);transform:translateY(-50%) scale(0.92);}
+.page-nav:disabled{opacity:0;pointer-events:none;}
+.page-nav.left{left:0.3rem;}
+.page-nav.right{right:0.3rem;}
+@keyframes navPulse{0%{color:rgba(255,255,255,0.28);}50%{color:rgba(255,255,255,0.7);}100%{color:rgba(255,255,255,0.28);}}
+.page-nav.pulse{animation:navPulse 1s ease-in-out 2;}
+@media(max-width:600px){.page-nav{font-size:2.2rem;padding:0.8rem 0.3rem;}}
 .arr:hover:not(:disabled){background:rgba(74,127,160,0.22);border-color:var(--teal-glow);}
 .arr:disabled{opacity:0.18;cursor:default;}
 #pg-counter{font-size:0.6rem;letter-spacing:0.28em;color:rgba(255,255,255,0.3);text-transform:uppercase;}
@@ -506,6 +515,8 @@ html,body{width:100%;height:100%;background:var(--deep);color:#fff;font-family:'
     <span id="pg-counter">Page 1 of 47</span>
     <button class="arr" id="next" onclick="turn(1)">&#8594;</button>
   </div>
+  <button class="page-nav left" id="nav-left" onclick="turn(-1)" disabled aria-label="Previous page">&#8249;</button>
+  <button class="page-nav right" id="nav-right" onclick="turn(1)" aria-label="Next page">&#8250;</button>
 </div>
 
 <div id="toc-overlay">
@@ -1194,6 +1205,8 @@ function goTo(n,dir){
     document.getElementById('pg-counter').textContent='Page '+(cur+1)+' of '+total;
     document.getElementById('prev').disabled=cur===0;
     document.getElementById('next').disabled=cur===total-1;
+    document.getElementById('nav-left').disabled=cur===0;
+    document.getElementById('nav-right').disabled=cur===total-1;
   },30);
   setTimeout(()=>{
     prev.classList.remove('exit-left','exit-right');
@@ -1203,6 +1216,8 @@ function goTo(n,dir){
 }
 
 function turn(d){goTo(cur+d,d>0?'left':'right');}
+let _navPulsed=false;
+function openBookNav(){if(!_navPulsed){_navPulsed=true;pulseNav();}}
 
 function jumpTo(id){
   const idx=allPages.findIndex(p=>p.id===id);
@@ -1210,6 +1225,14 @@ function jumpTo(id){
   toggleTOC();
 }
 
+function pulseNav(){
+  const nl=document.getElementById('nav-left');
+  const nr=document.getElementById('nav-right');
+  setTimeout(()=>{
+    nr.classList.add('pulse');
+    setTimeout(()=>{nr.classList.remove('pulse');},2200);
+  },1200);
+}
 function enterBook(){
   if(absorbing)return;
   absorbing=true;absorbT=0;absorbDone=false;
