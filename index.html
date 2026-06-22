@@ -515,9 +515,11 @@ html,body{width:100%;height:100%;background:var(--deep);color:#fff;font-family:'
     <span id="pg-counter">Page 1 of 47</span>
     <button class="arr" id="next" onclick="turn(1)">&#8594;</button>
   </div>
-  <button class="page-nav left" id="nav-left" onclick="turn(-1)" disabled aria-label="Previous page">&#8249;</button>
-  <button class="page-nav right" id="nav-right" onclick="turn(1)" aria-label="Next page">&#8250;</button>
 </div>
+
+<!-- Floating page nav -->
+<button class="page-nav left" id="nav-left" onclick="turn(-1)" style="display:none;" aria-label="Previous page">&#8249;</button>
+<button class="page-nav right" id="nav-right" onclick="turn(1)" style="display:none;" aria-label="Next page">&#8250;</button>
 
 <div id="toc-overlay">
   <canvas id="toc-canvas"></canvas>
@@ -1205,8 +1207,8 @@ function goTo(n,dir){
     document.getElementById('pg-counter').textContent='Page '+(cur+1)+' of '+total;
     document.getElementById('prev').disabled=cur===0;
     document.getElementById('next').disabled=cur===total-1;
-    document.getElementById('nav-left').disabled=cur===0;
-    document.getElementById('nav-right').disabled=cur===total-1;
+    document.getElementById('nav-left').style.opacity=cur===0?'0.1':'1';
+    document.getElementById('nav-right').style.opacity=cur===total-1?'0.1':'1';
   },30);
   setTimeout(()=>{
     prev.classList.remove('exit-left','exit-right');
@@ -1261,6 +1263,9 @@ function tocJump(pg){
   stopTOCCanvas();
   document.getElementById('toc-overlay').classList.remove('open');
   document.getElementById('book').classList.add('open');
+  document.getElementById('nav-left').style.display='block';
+  document.getElementById('nav-right').style.display='block';
+  openBookNav();
   setTimeout(()=>{
     const idx=allPages.findIndex(p=>p.id===pg);
     if(idx>=0)goTo(idx,idx>cur?'left':'right');
@@ -1273,6 +1278,9 @@ function tocSkip(){
   stopTOCCanvas();
   document.getElementById('toc-overlay').classList.remove('open');
   document.getElementById('book').classList.add('open');
+  document.getElementById('nav-left').style.display='block';
+  document.getElementById('nav-right').style.display='block';
+  openBookNav();
 }
 function toggleTOCMusic(){
   const m=document.getElementById('toc-music');
