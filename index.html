@@ -518,8 +518,8 @@ html,body{width:100%;height:100%;background:var(--deep);color:#fff;font-family:'
 </div>
 
 <!-- Floating page nav -->
-<button class="page-nav left" id="nav-left" onclick="turn(-1)" style="display:none;" aria-label="Previous page">&#8249;</button>
-<button class="page-nav right" id="nav-right" onclick="turn(1)" style="display:none;" aria-label="Next page">&#8250;</button>
+<button class="page-nav left" id="nav-left" onclick="turn(-1)" style="opacity:0;pointer-events:none;transition:opacity 0.5s;" aria-label="Previous page">&#8249;</button>
+<button class="page-nav right" id="nav-right" onclick="turn(1)" style="opacity:0;pointer-events:none;transition:opacity 0.5s;" aria-label="Next page">&#8250;</button>
 
 <div id="toc-overlay">
   <canvas id="toc-canvas"></canvas>
@@ -1263,8 +1263,8 @@ function tocJump(pg){
   stopTOCCanvas();
   document.getElementById('toc-overlay').classList.remove('open');
   document.getElementById('book').classList.add('open');
-  document.getElementById('nav-left').style.display='block';
-  document.getElementById('nav-right').style.display='block';
+  document.getElementById('nav-left').style.opacity='1';document.getElementById('nav-left').style.pointerEvents='auto';
+  document.getElementById('nav-right').style.opacity='1';document.getElementById('nav-right').style.pointerEvents='auto';
   openBookNav();
   setTimeout(()=>{
     const idx=allPages.findIndex(p=>p.id===pg);
@@ -1278,8 +1278,8 @@ function tocSkip(){
   stopTOCCanvas();
   document.getElementById('toc-overlay').classList.remove('open');
   document.getElementById('book').classList.add('open');
-  document.getElementById('nav-left').style.display='block';
-  document.getElementById('nav-right').style.display='block';
+  document.getElementById('nav-left').style.opacity='1';document.getElementById('nav-left').style.pointerEvents='auto';
+  document.getElementById('nav-right').style.opacity='1';document.getElementById('nav-right').style.pointerEvents='auto';
   openBookNav();
 }
 function toggleTOCMusic(){
