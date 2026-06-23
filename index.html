@@ -667,7 +667,7 @@ setTimeout(function(){
 
 // ── MYSTERY EVENTS SYSTEM ──
 // UAP (3I Atlas-style craft)
-const uap={active:false,x:0,y:0,vx:0,vy:0,angle:0,opacity:0,phase:'idle',size:7};
+const uap={active:false,x:0,y:0,vx:0,vy:0,angle:0,opacity:0,phase:'idle',size:4};
 function launchUAP(){
   if(uap.active||absorbing)return;
   uap.active=true;uap.phase='fadein';uap.opacity=0;
@@ -1073,17 +1073,42 @@ function drawEye(){
     if(uap.phase==='fadeout'){uap.opacity=Math.max(0,uap.opacity-0.022);if(uap.opacity<=0)uap.active=false;}
     if(uap.opacity>0){
       cx.save();cx.translate(uap.x,uap.y);cx.rotate(uap.angle);cx.globalAlpha=uap.opacity;
-      const tr=cx.createLinearGradient(-50,0,0,0);
-      tr.addColorStop(0,'rgba(120,200,255,0)');tr.addColorStop(1,'rgba(120,200,255,0.25)');
-      cx.strokeStyle=tr;cx.lineWidth=1.5;cx.beginPath();cx.moveTo(-50,0);cx.lineTo(-5,0);cx.stroke();
+      // 3I/ATLAS teardrop: rounded forward nucleus, tapering rear, forward-facing ion tail
       const s=uap.size;
-      cx.fillStyle='rgba(190,225,255,0.88)';
-      cx.beginPath();cx.moveTo(s*1.8,0);cx.lineTo(-s,s*0.65);cx.lineTo(-s*0.4,0);cx.lineTo(-s,-s*0.65);cx.closePath();cx.fill();
-      const halo=cx.createRadialGradient(0,0,0,0,0,s*5);
-      halo.addColorStop(0,'rgba(120,210,255,0.3)');halo.addColorStop(0.5,'rgba(80,160,255,0.1)');halo.addColorStop(1,'rgba(0,100,255,0)');
-      cx.fillStyle=halo;cx.beginPath();cx.arc(0,0,s*5,0,Math.PI*2);cx.fill();
+      // Ion tail -- extends FORWARD (positive X = travel direction) long diffuse cone
+      const ionTail=cx.createLinearGradient(0,0,s*22,0);
+      ionTail.addColorStop(0,'rgba(160,220,255,0.28)');ionTail.addColorStop(0.4,'rgba(100,190,255,0.12)');ionTail.addColorStop(1,'rgba(60,160,255,0)');
+      cx.save();
+      cx.beginPath();cx.moveTo(s*1.2,-s*1.8);cx.lineTo(s*22,0);cx.lineTo(s*1.2,s*1.8);cx.closePath();
+      cx.fillStyle=ionTail;cx.fill();
+      cx.restore();
+      // Short dust trail behind (negative X) -- faint
+      const dustTr=cx.createLinearGradient(-s*8,0,0,0);
+      dustTr.addColorStop(0,'rgba(200,210,255,0)');dustTr.addColorStop(1,'rgba(200,210,255,0.08)');
+      cx.beginPath();cx.moveTo(-s*8,-s*0.6);cx.lineTo(0,0);cx.lineTo(-s*8,s*0.6);cx.closePath();
+      cx.fillStyle=dustTr;cx.fill();
+      // Teardrop nucleus: ellipse rounded at +x, pointed at -x
+      cx.save();
+      cx.beginPath();
+      cx.moveTo(-s*1.1,0);
+      cx.bezierCurveTo(-s*0.6,-s*0.7,s*0.4,-s*0.9,s*1.4,0);
+      cx.bezierCurveTo(s*0.4,s*0.9,-s*0.6,s*0.7,-s*1.1,0);
+      cx.closePath();
+      const bodyGrad=cx.createRadialGradient(s*0.5,0,0,s*0.2,0,s*1.6);
+      bodyGrad.addColorStop(0,'rgba(255,255,255,0.95)');
+      bodyGrad.addColorStop(0.3,'rgba(200,235,255,0.88)');
+      bodyGrad.addColorStop(1,'rgba(120,200,255,0.5)');
+      cx.fillStyle=bodyGrad;cx.fill();
+      cx.restore();
+      // Forward coma -- diffuse bloom ahead of nucleus
+      const coma=cx.createRadialGradient(s*1.2,0,0,s*0.8,0,s*4.5);
+      coma.addColorStop(0,'rgba(200,240,255,0.22)');coma.addColorStop(0.5,'rgba(120,210,255,0.08)');coma.addColorStop(1,'rgba(60,160,255,0)');
+      cx.fillStyle=coma;cx.beginPath();cx.ellipse(s*1.2,0,s*4.5,s*2.8,0,0,Math.PI*2);cx.fill();
+      // Nucleus bright core pulse
       const blp=0.5+0.5*Math.sin(t*0.15);
-      cx.fillStyle=`rgba(200,240,255,${blp*0.9})`;cx.beginPath();cx.arc(0,0,s*0.5,0,Math.PI*2);cx.fill();
+      const core=cx.createRadialGradient(s*0.4,0,0,s*0.4,0,s*0.9);
+      core.addColorStop(0,`rgba(255,255,255,${0.9+blp*0.1})`);core.addColorStop(1,'rgba(180,230,255,0)');
+      cx.fillStyle=core;cx.beginPath();cx.arc(s*0.4,0,s*0.9,0,Math.PI*2);cx.fill();
       cx.restore();
     }
   }
