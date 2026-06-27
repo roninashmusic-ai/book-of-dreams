@@ -201,7 +201,7 @@ html,body{width:100%;height:100%;background:var(--deep);color:#fff;font-family:'
       <span class="pg-num">Page 3</span>
     </div>
   </div>
-  <div class="page active" id="pg5">
+  <div class="page" id="pg5">
     <div class="page-card" style="background:#000;display:flex;align-items:center;justify-content:center;overflow:hidden;">
       <div style="position:relative;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;">
         <canvas id="pg5-stars" style="position:absolute;inset:0;width:100%;height:100%;z-index:0;"></canvas>
@@ -1339,8 +1339,7 @@ drawEye();
 
 const allPages=Array.from(document.querySelectorAll('.page'));
 const total=allPages.length;
-let cur=allPages.findIndex(p=>p.classList.contains('active')),transitioning=false;
-if(cur<0)cur=0;
+let cur=0,transitioning=false;
 
 function goTo(n,dir){
   if(transitioning||n===cur||n<0||n>=total)return;
