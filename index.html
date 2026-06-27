@@ -547,6 +547,28 @@ html,body{width:100%;height:100%;background:var(--deep);color:#fff;font-family:'
 <button class="page-nav left" id="nav-left" onclick="turn(-1)" style="opacity:0;pointer-events:none;transition:opacity 0.5s;" aria-label="Previous page">&#8249;</button>
 <button class="page-nav right" id="nav-right" onclick="turn(1)" style="opacity:0;pointer-events:none;transition:opacity 0.5s;" aria-label="Next page">&#8250;</button>
 
+<div id="welcome-overlay" style="position:fixed;inset:0;z-index:98;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.8s ease;">
+  <canvas id="welcome-canvas" style="position:absolute;inset:0;width:100%;height:100%;z-index:0;"></canvas>
+  <div style="position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:3rem 1.5rem;text-align:center;">
+    <div style="position:relative;width:200px;height:200px;margin-bottom:2rem;">
+      <div class="d-halo d-halo-3"></div>
+      <div class="d-halo d-halo-2"></div>
+      <div class="d-halo d-halo-1"></div>
+      <div class="d-portrait-circle">
+        <img class="d-portrait-img" src="welcome_2_dreams.jpg" alt="Roni Nash"/>
+        <div class="d-portrait-veil"></div>
+        <div class="d-portrait-shimmer"></div>
+      </div>
+      <canvas id="welcome-particles" class="d-particle-canvas" width="300" height="300"></canvas>
+    </div>
+    <p style="font-family:'Georgia',serif;font-size:0.65rem;letter-spacing:0.35em;text-transform:uppercase;color:rgba(255,255,255,0.9);text-shadow:0 0 20px rgba(255,255,255,0.6);margin-bottom:0.5rem;">Roni Nash</p>
+    <h1 style="font-family:'Georgia',serif;font-size:clamp(2rem,5vw,3.2rem);font-weight:400;font-style:italic;color:#d4af5a;letter-spacing:0.06em;margin-bottom:0.5rem;text-shadow:0 0 40px rgba(212,175,90,0.5),0 0 80px rgba(212,175,90,0.25);">Welcome to My Dreams</h1>
+    <p style="font-family:'Georgia',serif;font-size:0.62rem;letter-spacing:0.25em;text-transform:uppercase;color:rgba(255,255,255,0.28);margin-bottom:1.8rem;">A Transmedia Universe</p>
+    <p style="font-family:'Georgia',serif;font-size:0.92rem;font-style:italic;color:rgba(255,255,255,0.55);line-height:1.9;max-width:420px;margin-bottom:3rem;">&ldquo;These pages hold the fragments, the visions, the music, the worlds I&rsquo;ve built in the ether.&rdquo;</p>
+    <button onclick="enterUniverse()" style="font-family:'Georgia',serif;font-size:0.68rem;letter-spacing:0.35em;text-transform:uppercase;background:transparent;border:1px solid rgba(212,175,90,0.5);color:rgba(212,175,90,0.9);padding:1rem 3rem;cursor:pointer;transition:all 0.3s;animation:enter-pulse 2.5s ease-in-out infinite;" onmouseover="this.style.background='rgba(212,175,90,0.1)';this.style.borderColor='rgba(212,175,90,0.9)'" onmouseout="this.style.background='transparent';this.style.borderColor='rgba(212,175,90,0.5)'">&#9654;&nbsp; Enter the Universe</button>
+  </div>
+</div>
+
 <div id="dreams-overlay" style="position:fixed;inset:0;z-index:99;transition:opacity 0.7s ease;background:#000;overflow-y:scroll;">
   <canvas id="dreams-canvas" style="position:absolute;inset:0;width:100%;height:100%;z-index:0;display:block;"></canvas>
   <div style="position:relative;z-index:2;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:clamp(3rem,8vh,6rem) 1.5rem clamp(3rem,6vh,5rem);">
@@ -556,7 +578,7 @@ html,body{width:100%;height:100%;background:var(--deep);color:#fff;font-family:'
       <div class="d-halo d-halo-2"></div>
       <div class="d-halo d-halo-1"></div>
       <div class="d-portrait-circle">
-        <img class="d-portrait-img" src="page_5.png" alt="Roni Nash"/>
+        <img class="d-portrait-img" src="welcome_2_dreams.jpg" alt="Roni Nash"/>
         <div class="d-portrait-veil"></div>
         <div class="d-portrait-shimmer"></div>
       </div>
@@ -907,7 +929,7 @@ function drawEye(){
       cx.fillStyle='#000';cx.fillRect(0,0,W,H);
       setTimeout(()=>{
         document.getElementById('landing').style.display='none';
-        openDreams();
+        openWelcome();
       },80);
     }else{
       requestAnimationFrame(drawEye);
@@ -1351,6 +1373,49 @@ function enterBook(){
   hc.style.pointerEvents='none';
 }
 
+function openWelcome(){
+  if(window.stopHeroAudio)window.stopHeroAudio();
+  const ov=document.getElementById('welcome-overlay');
+  ov.style.opacity='0';ov.style.pointerEvents='all';
+  requestAnimationFrame(()=>{ov.style.opacity='1';});
+  startWelcomeCanvas();
+  startDreamsParticles();
+}
+function closeWelcome(){
+  const ov=document.getElementById('welcome-overlay');
+  ov.style.opacity='0';
+  setTimeout(()=>{ov.style.pointerEvents='none';},800);
+  stopWelcomeCanvas();
+}
+function enterUniverse(){
+  closeWelcome();
+  setTimeout(()=>{openDreams();},400);
+}
+let _welcomeAnimId=null;
+function startWelcomeCanvas(){
+  const c=document.getElementById('welcome-canvas');
+  if(!c)return;
+  c.width=window.innerWidth;c.height=window.innerHeight;
+  const cx=c.getContext('2d');
+  const stars=Array.from({length:180},()=>({
+    x:Math.random()*c.width,y:Math.random()*c.height,
+    r:Math.random()*1.3+0.3,o:Math.random()*0.6+0.2,
+    s:Math.random()*0.003+0.001,d:Math.random()>0.5?1:-1
+  }));
+  function draw(){
+    cx.clearRect(0,0,c.width,c.height);
+    stars.forEach(s=>{
+      s.o+=s.s*s.d;if(s.o>0.8||s.o<0.15)s.d*=-1;
+      cx.beginPath();cx.arc(s.x,s.y,s.r,0,Math.PI*2);
+      cx.fillStyle='rgba(255,255,255,'+s.o+')';cx.fill();
+    });
+    _welcomeAnimId=requestAnimationFrame(draw);
+  }
+  draw();
+}
+function stopWelcomeCanvas(){
+  if(_welcomeAnimId)cancelAnimationFrame(_welcomeAnimId);_welcomeAnimId=null;
+}
 function openDreams(){
   if(window.stopHeroAudio)window.stopHeroAudio();
   const ov=document.getElementById('dreams-overlay');
