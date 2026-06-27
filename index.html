@@ -945,7 +945,15 @@ function drawEye(){
       cx.fillStyle='#000';cx.fillRect(0,0,W,H);
       setTimeout(()=>{
         document.getElementById('landing').style.display='none';
-        openDreams();
+        if(window.stopHeroAudio)window.stopHeroAudio();
+        document.getElementById('book').classList.add('open');
+        document.getElementById('nav-left').style.opacity='1';document.getElementById('nav-left').style.pointerEvents='auto';
+        document.getElementById('nav-right').style.opacity='1';document.getElementById('nav-right').style.pointerEvents='auto';
+        openBookNav();
+        setTimeout(function(){
+          var idx=allPages.findIndex(function(p){return p.id==='pg5';});
+          if(idx>=0)goTo(idx,'left');
+        },420);
       },80);
     }else{
       requestAnimationFrame(drawEye);
