@@ -188,14 +188,14 @@ html,body{width:100%;height:100%;background:var(--deep);color:#fff;font-family:'
   </div>
   <div id="viewport">
 
-  <div class="page" id="pg1">
+  <div class="page page-hidden" id="pg1">
     <div class="page-card">
       <img class="page-img" src="page_1.png" alt="Page 1"/>
       
       <span class="pg-num">Page 1</span>
     </div>
   </div>
-  <div class="page" id="pg3">
+  <div class="page page-hidden" id="pg3">
     <div class="page-card">
       <img class="page-img" src="page_3.png" alt="Page 3"/>
       <span class="pg-num">Page 3</span>
@@ -1337,7 +1337,7 @@ function drawEye(){
 }
 drawEye();
 
-const allPages=Array.from(document.querySelectorAll('.page'));
+const allPages=Array.from(document.querySelectorAll('.page:not(.page-hidden)'));
 const total=allPages.length;
 let cur=0,transitioning=false;
 
