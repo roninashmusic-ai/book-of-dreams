@@ -54,7 +54,7 @@ html,body{width:100%;height:100%;background:var(--deep);color:#fff;font-family:'
 .d-dream-desc{font-family:'Georgia',serif;font-size:0.75rem;color:rgba(255,255,255,0.4);line-height:1.5;font-style:italic;}
 .d-badge{font-size:0.55rem;letter-spacing:0.12em;text-transform:uppercase;padding:3px 8px;border-radius:2px;border:1px solid;flex-shrink:0;}
 .d-arrow{font-size:18px;color:rgba(212,175,90,0.4);flex-shrink:0;}
-#dreams-overlay.open{opacity:1;pointer-events:all;}
+#dreams-overlay{opacity:0;pointer-events:none;}#dreams-overlay.open{opacity:1;pointer-events:all;}
 .nav-toc{background:transparent;border:0.5px solid rgba(74,127,160,0.5);color:rgba(255,255,255,0.75);font-family:'Georgia',serif;font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;padding:0.3rem 0.9rem;cursor:pointer;transition:all 0.2s;}
 .nav-toc:hover{background:rgba(74,127,160,0.22);border-color:var(--teal-glow);color:#fff;}
 #viewport{flex:1;position:relative;overflow:hidden;perspective:2000px;}
@@ -547,7 +547,7 @@ html,body{width:100%;height:100%;background:var(--deep);color:#fff;font-family:'
 <button class="page-nav left" id="nav-left" onclick="turn(-1)" style="opacity:0;pointer-events:none;transition:opacity 0.5s;" aria-label="Previous page">&#8249;</button>
 <button class="page-nav right" id="nav-right" onclick="turn(1)" style="opacity:0;pointer-events:none;transition:opacity 0.5s;" aria-label="Next page">&#8250;</button>
 
-<div id="dreams-overlay" style="position:fixed;inset:0;z-index:99;opacity:0;pointer-events:none;transition:opacity 0.7s ease;background:#000;overflow-y:scroll;">
+<div id="dreams-overlay" style="position:fixed;inset:0;z-index:99;transition:opacity 0.7s ease;background:#000;overflow-y:scroll;">
   <canvas id="dreams-canvas" style="position:absolute;inset:0;width:100%;height:100%;z-index:0;display:block;"></canvas>
   <div style="position:relative;z-index:2;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:clamp(3rem,8vh,6rem) 1.5rem clamp(3rem,6vh,5rem);">
 
