@@ -547,8 +547,8 @@ html,body{width:100%;height:100%;background:var(--deep);color:#fff;font-family:'
 <button class="page-nav left" id="nav-left" onclick="turn(-1)" style="opacity:0;pointer-events:none;transition:opacity 0.5s;" aria-label="Previous page">&#8249;</button>
 <button class="page-nav right" id="nav-right" onclick="turn(1)" style="opacity:0;pointer-events:none;transition:opacity 0.5s;" aria-label="Next page">&#8250;</button>
 
-<div id="dreams-overlay" style="position:fixed;inset:0;z-index:99;opacity:0;pointer-events:none;transition:opacity 0.7s ease;background:#000;overflow-y:auto;">
-  <canvas id="dreams-canvas" style="position:fixed;inset:0;width:100%;height:100%;z-index:0;display:block;"></canvas>
+<div id="dreams-overlay" style="position:fixed;inset:0;z-index:99;opacity:0;pointer-events:none;transition:opacity 0.7s ease;background:#000;overflow-y:scroll;">
+  <canvas id="dreams-canvas" style="position:absolute;inset:0;width:100%;height:100%;z-index:0;display:block;"></canvas>
   <div style="position:relative;z-index:2;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:clamp(3rem,8vh,6rem) 1.5rem clamp(3rem,6vh,5rem);">
 
     <div style="position:relative;width:180px;height:180px;margin-bottom:28px;flex-shrink:0;">
@@ -1375,7 +1375,8 @@ let _dreamsAnimId=null;
 function startDreamsCanvas(){
   const c=document.getElementById('dreams-canvas');
   if(!c)return;
-  c.width=window.innerWidth;c.height=window.innerHeight;
+  const ov=document.getElementById('dreams-overlay');
+  c.width=ov.offsetWidth||window.innerWidth;c.height=ov.offsetHeight||window.innerHeight;
   const cx=c.getContext('2d');
   const stars=Array.from({length:160},()=>({
     x:Math.random()*c.width,y:Math.random()*c.height,
