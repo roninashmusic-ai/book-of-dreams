@@ -1339,7 +1339,8 @@ drawEye();
 
 const allPages=Array.from(document.querySelectorAll('.page'));
 const total=allPages.length;
-let cur=0,transitioning=false;
+let cur=allPages.findIndex(p=>p.classList.contains('active')),transitioning=false;
+if(cur<0)cur=0;
 
 function goTo(n,dir){
   if(transitioning||n===cur||n<0||n>=total)return;
