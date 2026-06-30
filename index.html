@@ -201,7 +201,7 @@ html,body{width:100%;height:100%;background:var(--deep);color:#fff;font-family:'
       <span class="pg-num">Page 3</span>
     </div>
   </div>
-  <div class="page active" id="pg5">
+  <div class="page" id="pg5">
     <div class="page-card">
       <img class="page-img" src="page_5.png" alt="Page 5"/>
       <span class="pg-num">Page 5</span>
@@ -1304,7 +1304,7 @@ drawEye();
 
 const allPages=Array.from(document.querySelectorAll('.page'));
 const total=allPages.length;
-let cur=0,transitioning=false;
+let cur=2,transitioning=false;
 
 function goTo(n,dir){
   if(transitioning||n===cur||n<0||n>=total)return;
@@ -1417,13 +1417,8 @@ function openEcliptia(){
   setTimeout(()=>{toggleTOC();},300);
 }
 function openDreamJournal(){
-  console.log('openDreamJournal called, cur before=', cur);
   closeDreams();
-  setTimeout(()=>{
-    console.log('about to tocJump, cur=', cur);
-    tocJump('pg49');
-    console.log('after tocJump, cur=', cur);
-  },300);
+  setTimeout(()=>{tocJump('pg49');},300);
 }
 function closeTOCBackToDreams(){
   toggleTOC();
