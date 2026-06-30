@@ -1421,17 +1421,15 @@ function openDreamJournal(){
   closeDreams();
   setTimeout(()=>{tocJump('pg49');},300);
 }
-(function(){
+document.addEventListener('wheel', function(e){
   const pg49 = document.getElementById('pg49');
-  if(!pg49) return;
-  pg49.addEventListener('wheel', function(e){
-    const scroller = pg49.querySelector('.dj-scroll');
-    if(scroller){
-      scroller.scrollTop += e.deltaY;
-      e.preventDefault();
-    }
-  }, {passive:false});
-})();
+  if(!pg49 || !pg49.classList.contains('active')) return;
+  const scroller = pg49.querySelector('.dj-scroll');
+  if(scroller){
+    scroller.scrollTop += e.deltaY;
+    e.preventDefault();
+  }
+}, {passive:false});
 function closeTOCBackToDreams(){
   toggleTOC();
   setTimeout(()=>{openDreams();},350);
