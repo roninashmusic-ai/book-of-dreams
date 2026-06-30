@@ -1417,8 +1417,13 @@ function openEcliptia(){
   setTimeout(()=>{toggleTOC();},300);
 }
 function openDreamJournal(){
+  console.log('openDreamJournal called, cur before=', cur);
   closeDreams();
-  setTimeout(()=>{tocJump('pg49');},300);
+  setTimeout(()=>{
+    console.log('about to tocJump, cur=', cur);
+    tocJump('pg49');
+    console.log('after tocJump, cur=', cur);
+  },300);
 }
 function closeTOCBackToDreams(){
   toggleTOC();
