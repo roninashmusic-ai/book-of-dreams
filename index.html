@@ -1421,6 +1421,17 @@ function openDreamJournal(){
   closeDreams();
   setTimeout(()=>{tocJump('pg49');},300);
 }
+(function(){
+  const pg49 = document.getElementById('pg49');
+  if(!pg49) return;
+  pg49.addEventListener('wheel', function(e){
+    const scroller = pg49.querySelector('.dj-scroll');
+    if(scroller){
+      scroller.scrollTop += e.deltaY;
+      e.preventDefault();
+    }
+  }, {passive:false});
+})();
 function closeTOCBackToDreams(){
   toggleTOC();
   setTimeout(()=>{openDreams();},350);
