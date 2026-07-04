@@ -440,7 +440,7 @@ html,body{width:100%;height:100%;background:var(--deep);color:#fff;font-family:'
         </div>
         <div class="video-container">
           <iframe
-            src="https://www.youtube.com/embed/ls75r4ih8oE?rel=0&modestbranding=1&showinfo=0&color=white"
+            src="https://www.youtube.com/embed/ls75r4ih8oE?rel=0&modestbranding=1&showinfo=0&color=white&autoplay=1&mute=1"
             title="Roni Nash — Ready 2 Love"
             frameborder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -1331,6 +1331,10 @@ function goTo(n,dir){
     prev.style.zIndex='';next.style.zIndex='';
     transitioning=false;
   },750);
+  if(allPages[n].id==='pg39'){
+    var yf=document.querySelector('#pg39 iframe');
+    if(yf){var s=yf.src.replace(/&t=\d+/,'');yf.src='';setTimeout(function(){yf.src=s;},50);}
+  }
 }
 
 function turn(d){goTo(cur+d,d>0?'left':'right');}
