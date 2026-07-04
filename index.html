@@ -1812,7 +1812,7 @@ function djOpenEntry(id){
   detail.style.display='block';
   detail.innerHTML='<button id="dj-back" style="background:transparent;border:1px solid rgba(245,168,0,0.3);color:rgba(245,168,0,0.8);font-family:Georgia,serif;font-size:0.72rem;letter-spacing:0.05em;padding:6px 14px;border-radius:6px;cursor:pointer;margin-bottom:1.6rem;">Back to journal</button><div style="font-size:clamp(0.82rem,2.2vh,1.05rem);color:rgba(245,168,0,0.9);letter-spacing:0.18em;text-transform:uppercase;margin-bottom:clamp(1rem,2.6vh,1.6rem);">From the Dream Journal</div><div style="font-size:clamp(1.4rem,4.4vh,2.1rem);line-height:1.22;color:#f3ead2;margin-bottom:0.45rem;">'+djEscape(e.title)+'</div><div style="font-size:clamp(0.72rem,1.8vh,0.9rem);font-style:italic;color:rgba(245,168,0,0.55);letter-spacing:0.04em;margin-bottom:clamp(1.2rem,3vh,2rem);">'+djEscape(e.subtitle||'')+(e.displayLabel?' · '+djEscape(e.displayLabel):'')+'</div><div style="font-size:clamp(0.84rem,2vh,0.99rem);line-height:1.9;color:rgba(232,228,214,0.82);">'+e.body+'</div>';
   document.getElementById('dj-back').onclick=djShowGrid;
-  detail.querySelectorAll('.yt-poster').forEach(function(p){p.style.pointerEvents='all';p.style.cursor='pointer';p.addEventListener('click',function(e){e.stopPropagation();window.open(p.dataset.yturl,'_blank');});});
+  var djDetail=document.getElementById('dj-detail-view');djDetail.addEventListener('click',function(e){var p=e.target.closest('.yt-poster');if(p){e.stopPropagation();window.open(p.dataset.yturl,'_blank');}});
   const scroller=document.getElementById('dj-scroll');
   if(scroller) scroller.scrollTop=0;
 }
